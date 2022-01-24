@@ -19,7 +19,7 @@ export default class Bot{
                 message.channel.send('command not found')
                 return
             }
-            x[0].run(message.channel,args)
+            x[0].run(message,args)
         })
         Bot.client.on('ready',()=>{
             Bot?.client?.user?.setActivity('ts.help')

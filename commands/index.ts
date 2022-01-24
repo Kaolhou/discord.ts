@@ -1,3 +1,4 @@
 import ping from './ping'
 import help from './help'
-export default [ping,help]
+import kiss from './kiss'
+export default [ping,help,kiss]
