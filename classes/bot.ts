@@ -4,14 +4,20 @@ import Users from '../data/tables/user'
 import { sequelize } from '../classes/database'
 config()
 import command from '../commands/index'
-const intents = [Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_MESSAGES ]
+import sexo from '../functions/sexo'
+/*const intents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS ]
+const partials = ['MESSAGE', 'CHANNEL', 'REACTION']*/
 
 export default class Bot{
     public static client:Client
     constructor(private token:string){
-        Bot.client = new Client({intents})
+        Bot.client = new Client({
+            intents:[Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS ],
+            partials:['MESSAGE', 'CHANNEL', 'REACTION']
+        })
         Bot.client.on("messageCreate", (message):void=> {
             if(message.author.bot) return
+            sexo(message)
             this.increment(message)
             if(!message.content.startsWith(process.env.PREFIX!))return
             const msg:string = message.content.slice(process.env.PREFIX!.length)
@@ -24,6 +30,19 @@ export default class Bot{
             }
             x[0].run(message,args)
         })
+        Bot.client.on('messageReactionAdd', async (reaction, user) => {
+            console.log(reaction)
+            if (reaction.partial) {
+                try {
+                    await reaction.fetch();
+                } catch (error) {
+                    console.error('Something went wrong when fetching the message:', error);
+                    return;
+                }
+            }
+            console.log(`${reaction.message.author}'s message "${reaction.message.content}" gained a reaction!`);
+            console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
+        });
         Bot.client.on('ready',()=>{
             Bot?.client?.user?.setActivity('ts.help')
             console.log('ready XD')
@@ -35,7 +54,7 @@ export default class Bot{
     async increment(message:any){
         const selUser = await Users.findAll({where:{user: message.author.id}})
         if(!(selUser.length===1&&Array.isArray(selUser))){
-            await Users.create({count:1,user: message.author.id})
+            await Users.create({count:1,user: message.author.id,author:message.author.username})
         }else{
             let cont = await Users.findAll({attributes: ['count'],
                 where:{user: message.author.id}

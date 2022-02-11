@@ -1,10 +1,5 @@
 import {DataTypes} from 'sequelize'
-/*import Database from '../../classes/database'
-const database = new Database()*/
 import { Sequelize } from 'sequelize'
-//import user from '../../interfaces/user'
-//Database.db.sequelize
-//console.log(database)
 const sequelize = new Sequelize('test-db','user', 'pass',{
     host: '../discord.ts2/data/storage/dev.sqlite',
     dialect: 'sqlite'
@@ -20,6 +15,10 @@ const Users = sequelize.define('Users',{
     count: {
         type: DataTypes.INTEGER,
         autoIncrement: false,
+    },
+    author:{
+        type: DataTypes.STRING,
+        allowNull:false,
     }
 })
 

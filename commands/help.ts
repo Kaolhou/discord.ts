@@ -8,7 +8,7 @@ const help:Command = {
         const embed = new MessageEmbed()
             .setColor('#6666ff')
             .setTitle('Command Help')
-            .setDescription('Ping\nKiss')
+            .setDescription('Ping\nKiss\nMine')
             .setFooter({text:'Prefix ts.'}).setThumbnail('https://iconape.com/wp-content/png_logo_vector/typescript.png')
         return await message.channel.send({embeds: [embed]})
     }
