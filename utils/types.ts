@@ -7,10 +7,13 @@ export interface CommandI{
     exe: (interaction: CommandInteraction, client: Bot)=>unknown
     perms?:PermissionResolvable
 }
-export interface EventI{
-    eventName: string;
+export type EventName = keyof ClientEvents;
+export const TypedEvent = <T extends EventName>(event: EventI<T>) => event;
+
+export interface EventI<T extends EventName>{
+    eventName: T;
     once: boolean;
-    run: (client: Bot,...args:ClientEvents[])=>void;
+    run: (client: Bot,...args:ClientEvents[T])=>any;
 }
 export interface findI{
     path: string;

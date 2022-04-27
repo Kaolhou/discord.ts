@@ -3,7 +3,7 @@ import { CommandI } from "../utils/types"
 
 const ping:CommandI = {
     exe: async function(interaction, client){
-        await interaction.reply('Pong')
+        await interaction.reply(`Pong ${client.ws.ping}`)
     },
     data: new SlashCommandBuilder()
         .setName('ping')
