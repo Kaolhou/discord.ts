@@ -11,11 +11,10 @@ const help:CommandI = {
             arr.forEach((i)=>{acul +='- '+i+'\n'})
             return acul
         }
-        console.log(commands)
         const embed = new MessageEmbed()
             .setAuthor({name: 'discord.ts'})
             .setDescription(strFormat(commands))
-        await interaction.channel?.send({embeds:[embed]})
+        return await interaction.channel?.send({embeds:[embed]})
         
     },
     data: new SlashCommandBuilder()
