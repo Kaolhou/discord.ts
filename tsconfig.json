@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "allowJs": true,
+    "removeComments": true,
+    "outDir": "./build",
+    "target": "es2021",
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   }
 }

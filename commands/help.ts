@@ -1,16 +1,25 @@
+import { SlashCommandBuilder } from "@discordjs/builders"
 import { MessageEmbed } from "discord.js"
-import Command from "../interfaces/Command"
-    
-const help:Command = {
-    name: 'help',
-    description: 'show all commands',
-    run: async function(message:any, args:string):Promise<string>{
+import { CommandI } from "../utils/types"
+
+const help:CommandI = {
+    exe: async function(interaction, client){
+        const commands = client.commands.map((i)=>i.data.name)
+        const strFormat = function(arr:string[]){
+            let acul = ''
+
+            arr.forEach((i)=>{acul +='- '+i+'\n'})
+            return acul
+        }
+        console.log(commands)
         const embed = new MessageEmbed()
-            .setColor('#6666ff')
-            .setTitle('Command Help')
-            .setDescription('Ping\nKiss\nMine')
-            .setFooter({text:'Prefix ts.'}).setThumbnail('https://iconape.com/wp-content/png_logo_vector/typescript.png')
-        return await message.channel.send({embeds: [embed]})
-    }
+            .setAuthor({name: 'discord.ts'})
+            .setDescription(strFormat(commands))
+        await interaction.channel?.send({embeds:[embed]})
+        
+    },
+    data: new SlashCommandBuilder()
+        .setName('help')
+        .setDescription('show all commands')
 }
 export default help

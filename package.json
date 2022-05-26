@@ -1,21 +1,21 @@
 {
-  "name": "discord.ts2",
+  "name": "discord.ts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon index.ts"
+    "start": "nodemon index.ts",
+    "build": "tsc"
   },
   "keywords": [],
-  "types": "./index.d.ts",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cross-fetch": "^3.1.5",
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
+    "discord-api-types": "^0.31.2",
     "discord.js": "^13.6.0",
-    "dotenv": "^14.2.0",
-    "sequelize": "^6.14.1",
-    "sqlite3": "^5.0.2"
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

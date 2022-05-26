@@ -1,4 +1,4 @@
-require('dotenv').config()
+/*require('dotenv').config()
 import {Sequelize, DataTypes, QueryTypes } from 'sequelize'
 const sequelize = new Sequelize('test-db','user', 'pass',{
     host: '../discord.ts2/data/storage/dev.sqlite',
@@ -6,4 +6,4 @@ const sequelize = new Sequelize('test-db','user', 'pass',{
 })
 
 
-export {Sequelize,sequelize,DataTypes,QueryTypes }
+export {Sequelize,sequelize,DataTypes,QueryTypes }*/

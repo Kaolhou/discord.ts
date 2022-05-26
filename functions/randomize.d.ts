@@ -1,1 +1,0 @@
-declare function randomize(arr:any[]):any
