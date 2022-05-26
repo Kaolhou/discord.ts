@@ -29,7 +29,7 @@ const ready:EventI<any> = {
             const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 
             rest.put(Routes.applicationGuildCommands(process!.env!.CLIENT_ID!, process!.env!.GUILD_ID!),{ body: commandArr })
-            .then(()=>{console.log('commands loaded')})
+            .then(()=>{console.log('client.commands')})
             .catch((err)=>{console.log(err)})
         }))
         console.log('bot started')

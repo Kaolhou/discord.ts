@@ -1,9 +1,9 @@
 import { config } from "dotenv"; config()
 import { Client, ClientOptions, Collection } from 'discord.js'
 import { CommandI, EventI } from "../utils/types";
-import ping from "../commands/ping";
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v10";
+// import ping from "../commands/ping";
+// import { REST } from "@discordjs/rest";
+// import { Routes } from "discord-api-types/v10";
 import { eventFiles } from "../utils/files";
 
 
