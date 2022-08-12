@@ -20,4 +20,4 @@ Se estiver interessado no projeto pode iniciar em sua máquina seguindo as segui
 5. Para iniciar o **processo de build** digite no terminal *`npm run build`* para criar a pasta *dist* contendo arquivos TypeScript convertidos para JavaScript, para execuar a build solte *`npm start`*
 
 ## Contribuição
-Caso queira contribuir no projeto crie seu **Fork** e quando chegar em um resultado final me envie uma **Pull Request**, ou entre em contato com o meu **Discord Pessoal** `#Kaolhou#3901`
+Caso queira contribuir no projeto crie seu **Fork** e quando chegar em um resultado final me envie uma **Pull Request**, ou entre em contato com o meu **Discord Pessoal** `Kaolhou#3901`
