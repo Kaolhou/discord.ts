@@ -1,8 +1,13 @@
 import Bot from "../structures/Bot";
-import { commandFiles } from "../utils/files";
+import { commandFiles, findArr } from "../utils/files";
 import { CommandI, EventI } from "../utils/types";
 import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
+import { prisma } from "../prisma/prisma";
+import path from 'path'
+import util from 'util'
+import { memePerDay } from "../import/memePerDay";
+import { refreshDb } from "../import/refreshDb";
 
 
 const ready:EventI<any> = {
@@ -25,6 +30,11 @@ const ready:EventI<any> = {
                 commandArr.push(i.data.toJSON())
             })
 
+            //nome auto-explicativo
+            await refreshDb()
+
+            //this will put a meme in meme channel 1 time per day
+            await memePerDay(client)
 
             const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 
