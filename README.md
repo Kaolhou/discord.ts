@@ -16,7 +16,8 @@ Se estiver interessado no projeto pode iniciar em sua máquina seguindo as segui
     * DATABASE_URL **`postgresql://<user>:<password>@<host>:<port>/<database>`**
 
 3. O projeto conta com o ORM [prisma](https://www.prisma.io), para enviar o **schema** no banco de dados **postgresql** digite no terminal *`npx prisma db push`*
-4. O script de inicialização padrão é o *`npm start`*
+4. O script de inicialização padrão é o *`npm run dev`*
+5. Para iniciar o **processo de build** digite no terminal *`npm run build`* para criar a pasta *dist* contendo arquivos TypeScript convertidos para JavaScript, para execuar a build solte *`npm start`*
 
 ## Contribuição
 Caso queira contribuir no projeto crie seu **Fork** e quando chegar em um resultado final me envie uma **Pull Request**, ou entre em contato com o meu **Discord Pessoal** `#Kaolhou#3901`
