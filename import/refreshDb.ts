@@ -1,13 +1,13 @@
 import { prisma } from "../prisma/prisma"
 import { findArr } from "../utils/files"
 import path from 'path'
-import util from 'util'
+// import util from 'util'
 
 export async function refreshDb(){
     //this will refresh db
     const files = findArr(path.resolve(process.env!.PATH_MEMES!)).map((i)=>i.split('\\').slice(-1)[0])
     var data = await prisma.memes.findMany()
-    console.log(util.inspect(files, { maxArrayLength: 10 }))
+    // console.log(util.inspect(files, { maxArrayLength: 10 }))
 
     files.forEach(async(i)=>{
         

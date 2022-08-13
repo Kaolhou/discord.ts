@@ -1,13 +1,17 @@
 import { prisma } from "../prisma/prisma";
 import { findArr } from "../utils/files";
 import { randomize } from "../utils/randomize";
-import path from 'path'
 import { Client, MessageAttachment } from "discord.js";
 import { isSameDay } from "../utils/isSameDay";
+import path from 'path'
 
 export async function memePerDay(client:Client){
     const today = new Date()
-    const dbtoday = await prisma.date.findFirst()
+    const dbtoday = await prisma.date.findFirst({
+        orderBy:{
+            today:'desc'
+        }
+    })
     const memes = findArr(path.resolve(process.env!.PATH_MEMES!));
     const x = randomize(memes);
     const attachment = new MessageAttachment(x,x);
@@ -29,7 +33,7 @@ export async function memePerDay(client:Client){
                 // const channel = member.guild.channels.cache.find(ch => ch.name === 'YOUR CHANNEL NAME HERE');
                 const channel = client.channels.cache.find(ch => ch.id === process.env!.CHANNEL_MEMES!)
                 channel?.isText() && channel.send({
-                    attachments: [attachment]
+                    files: [attachment]
                 })
                 
             }else{
@@ -42,5 +46,5 @@ export async function memePerDay(client:Client){
             console.error(error)
         }
         
-    })(): console.log('nn faz nada')
+    })(): console.log('nn faz nada') // se chega aqui é pq ja mandou meme hj
 }
