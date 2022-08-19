@@ -9,4 +9,4 @@ const bot = new Bot({
     ],
     partials:["MESSAGE", "CHANNEL", "REACTION"]
 })
-bot.start()
+// bot.start()

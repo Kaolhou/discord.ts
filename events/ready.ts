@@ -3,18 +3,24 @@ import { commandFiles, findArr } from "../utils/files";
 import { CommandI, EventI } from "../utils/types";
 import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
-import { prisma } from "../prisma/prisma";
-import path from 'path'
-import util from 'util'
-import { memePerDay } from "../import/memePerDay";
-import { refreshDb } from "../import/refreshDb";
+import { memePerDay } from "../middleware/memePerDay";
+import { refreshDb } from "../middleware/refreshDb";
 
 
 const ready:EventI<any> = {
     eventName:'ready',
     once:true,
     async run(client:Bot){
-        const commandArr: Array<any> = [];
+        const commandArr: Array<CommandI> = [];
+        //nome auto-explicativo
+        await refreshDb()
+
+        //this will put a meme in meme channel 1 time per day
+        await memePerDay(client)
+        //* never put the middleware files into the Promise All, this will 
+        //* make the middleware execute a lot of times
+        //todo a function that import all middlewares automatically
+
         await Promise.all(commandFiles!.files!.map(async (file)=>{
             const command:CommandI = (await import(commandFiles.path+'\\'+file)).default;
             if (!command) {
@@ -29,12 +35,7 @@ const ready:EventI<any> = {
             imports.map((i)=>{
                 commandArr.push(i.data.toJSON())
             })
-
-            //nome auto-explicativo
-            await refreshDb()
-
-            //this will put a meme in meme channel 1 time per day
-            await memePerDay(client)
+            
 
             const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 

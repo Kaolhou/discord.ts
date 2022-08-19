@@ -9,12 +9,14 @@ class Bot extends Client{
 
     constructor(options:ClientOptions){
         super(options)
-        this.loadEvents()
+        this.loadEvents().then(()=>{
+            this.login(process.env!.TOKEN!)
+        })
     }
 
-    start(){
-        this.login(process.env!.TOKEN!)
-    }
+    /*start(){
+        
+    }*/
     private async loadEvents(){
         await Promise.all(eventFiles!.files!.map(async (file)=>{
             const event = (await import(eventFiles.path+'\\'+file)).default as EventI<any>;

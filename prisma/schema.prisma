@@ -26,7 +26,8 @@ model Memes {
   @@map("memes")
 }
 model Date{
-  today String @id
+  id Int @default(autoincrement()) @id
+  today DateTime @default(now())
   meme String
   
   @@map("date")
