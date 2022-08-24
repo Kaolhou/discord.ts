@@ -1,12 +1,16 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { prisma } from "../prisma/prisma"
+// import { prisma } from "../prisma/prisma"
 // import { MessageEmbed } from "discord.js"
 import { CommandI } from "../utils/types"
 
 const memes:CommandI = {
     exe: async function(interaction, client){
-        // prisma.memes.
-        interaction.options.getBoolean('nsfw')
+        if(interaction){
+            // prisma.memes.
+            interaction.options.getBoolean('nsfw')
+            console.log(client.users)
+            interaction.channel?.send('meme')
+        }
         
     },
     data: new SlashCommandBuilder()
@@ -21,7 +25,7 @@ const memes:CommandI = {
         .addBooleanOption(
             option=>option
                 .setName('nsfw')
-                .setDescription('true => will accept nsfw/sensitive content')
+                .setDescription('accept nsfw/sensitive content')
                 .setRequired(true)
         )
 }

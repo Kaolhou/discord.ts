@@ -1,7 +1,7 @@
 import { Memes } from "@prisma/client";
 import { Client } from "discord.js";
 import { prisma } from "../prisma/prisma";
-import { randomizeMemes } from "../utils/randomize";
+import { randomizeMemes } from "./randomize";
 import path from 'path'
 
 export async function SendMeme(client:Client, file? :Memes){
