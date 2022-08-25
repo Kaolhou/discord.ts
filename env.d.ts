@@ -5,7 +5,7 @@ declare global{
             TOKEN: string;
             GUILD_ID: string;
             PATH_MEMES: string;
-            CHANNEL_MEMES: string;
+            /*CHANNEL_MEMES: string;*/
         }
     }
 }

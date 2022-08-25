@@ -5,6 +5,9 @@ import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
 import { memePerDay } from "../middleware/memePerDay";
 import { refreshDb } from "../middleware/refreshDb";
+import { SendMeme } from "../utils/sendMeme";
+import { prisma } from "../prisma/prisma";
+import { randomizeMemes } from "../utils/randomize";
 
 
 const ready:EventI<any> = {
@@ -13,6 +16,10 @@ const ready:EventI<any> = {
     async run(client:Bot){
         try {
             const commandArr: Array<CommandI> = [];
+            client.user?.setActivity({
+                type: 'PLAYING',
+                name:'/help'
+            })
             //nome auto-explicativo
             await refreshDb()
 
@@ -38,7 +45,11 @@ const ready:EventI<any> = {
 
             const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 
-            rest.put(Routes.applicationGuildCommands(process!.env!.CLIENT_ID!, process!.env!.GUILD_ID!),{ body: commandArr })
+            /**
+             * substitua applicationCommands por applicationGuildCommands e retire o
+             * comentário da variavel de ambiente para adicionar comandos em um único servidor
+             */
+            rest.put(Routes.applicationCommands(process!.env!.CLIENT_ID!/*, process!.env!.GUILD_ID!*/),{ body: commandArr })
                 .then(()=>{console.log('commands loaded')})
                 .catch((err)=>{throw new Error(err)})
 

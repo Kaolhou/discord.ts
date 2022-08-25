@@ -47,6 +47,7 @@ export async function memePerDay(client:Client){
                 console.log('nada de meme no db, alterando')
             }
             if(dbtoday && !isSameDay(today,new Date(dbtoday.today.toString()))){
+                console.log(dbtoday,!isSameDay(today,new Date(dbtoday.today.toString())))
                 await prisma.date.create({
                     data:{
                         meme: selectedMeme.name,

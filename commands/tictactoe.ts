@@ -9,25 +9,18 @@ interface Tictactoe{
         [ttcNum,ttcNum,ttcNum],
         [ttcNum,ttcNum,ttcNum],
     ]
-    vez:boolean;
-    interaction:Interaction;
-    client:Client;
-    p1:any;//todo subsituir
-    p2:any;
-    
+    // vez:boolean;
+    // interaction:Interaction;
+    // client:Client;
+    // p1:any;//todo subsituir
+    // p2:any;
 }
 class Tictactoe implements Tictactoe{
-    constructor(p1:User, p2:User|GuildMember, interaction:Interaction, client:Client){
+    constructor(/*p1:User, p2:User|GuildMember, interaction:Interaction, client:Client*/){
         //declaração de variáveis da classe
-        interaction;client;p1;p2;
         this.board = [[0,0,0],
                       [0,0,0],
                       [0,0,0]]
-        /**
-         * true  -> player 1
-         * false -> player 2
-         */
-        this.vez = true
     }
     public render(rodada:number){
         //return a string to be send to discord
@@ -69,10 +62,14 @@ class Tictactoe implements Tictactoe{
             return false
         }
         return true
-
     }
-    public game(){
-        
+    isVelha():boolean{
+        for(let i=0;i<3;i++){
+            for(let j=0;j<3;j++){
+                if(this.board[i][j]==0) return false
+            }
+        }
+        return true
     }
 }
 
@@ -84,8 +81,6 @@ const tictactoe:CommandI = {
 
             const player1 = interaction.user
             const player2 = interaction.options.getMentionable('user') // mentionated user
-
-            //const Filter = (reaction,user)=>
             
             await interaction.channel?.send({content:`${player2}, por favor reaja a essa mensagem para poder jogar`,})
             .then(async(msg)=>{
@@ -93,46 +88,114 @@ const tictactoe:CommandI = {
                 return msg?.awaitReactions(
                     {
                         max: 1, 
-                        time: 30000, 
+                        time: ms, 
                         errors: ["time"], 
                         filter:
                             (reaction, userR) => {
                                 return userR.id == player2?.valueOf() && reaction.emoji.name =="✅"}
                     }
-                ).then(async(/*collected*/)=>{
+                ).then(async(collected)=>{
                     await msg.delete()
                     //local onde o jogo começa
                     if(player2 instanceof GuildMember){
-                        const game = new Tictactoe(player1,player2, interaction, client)
+                        const game = new Tictactoe(/*player1,player2, interaction, client*/)
                         let rodada = 0
-                        console.log(game.keepPlaying())
                         while(game.keepPlaying()){
-                            //
-                            let gameMsg = await interaction.channel?.send(game.render(rodada))
-                            await gameMsg?.react('⬅️')
-                            await gameMsg?.react('↖️')
-                            await gameMsg?.react('⬆️')
-                            await gameMsg?.react('↗️')
-                            await gameMsg?.react('➡️')
-                            await gameMsg?.react('↘️')
-                            await gameMsg?.react('⬇️')
-                            await gameMsg?.react('↙️')
-                            await gameMsg?.react('⏺️')
-                            let adsas = await gameMsg?.awaitReactions(
-                                {
-                                    max: 1, 
-                                    time: 30000, 
-                                    errors: ["time"], 
-                                    filter:
-                                        (reaction, userR) => {
-                                            return userR.id == (rodada%2==0 ? player1.id : player2.id)}
+                            while(!game.isVelha()){
+                                let vez = rodada%2==0 ? player1 : player2
+                                let gameMsg = await interaction.channel?.send(game.render(rodada))
+                                await gameMsg?.react('⬅️')
+                                await gameMsg?.react('↖️')
+                                await gameMsg?.react('⬆️')
+                                await gameMsg?.react('↗️')
+                                await gameMsg?.react('➡️')
+                                await gameMsg?.react('↘️')
+                                await gameMsg?.react('⬇️')
+                                await gameMsg?.react('↙️')
+                                await gameMsg?.react('⏺️')
+                                let adsas = await gameMsg?.awaitReactions(
+                                    {
+                                        max: 1, 
+                                        time: ms, 
+                                        errors: ["time"], 
+                                        filter:
+                                            (reaction, userR) => 
+                                                userR.id == vez.id//(rodada%2==0 ? player1.id : player2.id)
+                                            
+                                    }
+                                )
+                                switch(adsas?.toJSON()[0].emoji.name){
+                                    case '↖️':
+                                        game.board[0][0]==0?
+                                        game.board[0][0]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '⬆️':
+                                        game.board[0][1]==0?
+                                        game.board[0][1]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '↗️':
+                                        game.board[0][2]==0?
+                                        game.board[0][2]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '⬅️':
+                                        game.board[1][0]==0?
+                                        game.board[1][0]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '⏺️':
+                                        game.board[1][1]==0?
+                                        game.board[1][1]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '➡️':
+                                        game.board[1][2]==0?
+                                        game.board[1][2]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '↙️':
+                                        game.board[2][0]==0?
+                                        game.board[2][0]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '⬇️':
+                                        game.board[2][1]==0?
+                                        game.board[2][1]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    case '↘️':
+                                        game.board[2][2]==0?
+                                        game.board[2][2]=(rodada%2==0?1:-1):
+                                        rodada-=1
+                                        break;
+
+                                    default: break;
+                                            
+                                    
                                 }
-                            )
-                            console.log(adsas?.toJSON()[0].emoji.name)//* esse é o formato para achar o nome do emoji
-                            // switch(){
-                            //     case
-                            // }
-                            
+                                await gameMsg?.delete()
+                                if(!game.keepPlaying()){
+                                    interaction.channel?.send(`player ${rodada%2==0?player1.username:player2.nickname} win`)
+                                    await interaction.channel?.send(game.render(rodada))
+                                    console.log(`player ${rodada%2==0?1:-1} win`)
+                                }
+                                if(game.isVelha()){
+                                    await interaction.channel?.send('velha!!')
+                                    await interaction.channel?.send(game.render(rodada))
+
+                                }
+                                rodada++
+                            }
                         }
 
                         

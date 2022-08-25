@@ -3,6 +3,7 @@ import { Client } from "discord.js";
 import { prisma } from "../prisma/prisma";
 import { randomizeMemes } from "./randomize";
 import path from 'path'
+import fs from 'fs'
 
 export async function SendMeme(client:Client, file? :Memes){
     try {
@@ -14,14 +15,25 @@ export async function SendMeme(client:Client, file? :Memes){
             })
             file = randomizeMemes(dbmemes);
         }
-        const channel = client.channels.cache.find(ch => ch.id === process.env!.CHANNEL_MEMES!)
-        channel?.isText() && channel.send({
-            files: [{
-                attachment: path.resolve(process.env!.PATH_MEMES!, file.name),
-                name: file.name
-            }]
+        var jsobj:string[]=[]
+        let data = fs.readFileSync('chats.conf','utf-8')
+        JSON.parse(data).forEach((el:string) => {
+            jsobj.push(el)
         })
+        
+        // console.log(jsobj)
+        for(let i=0;i<jsobj.length;i++){
+            const channel = client.channels.cache.find(ch => ch.id === jsobj[i])
+            channel?.isText() && await channel.send({
+                files: [{
+                    attachment: path.resolve(process.env!.PATH_MEMES!, file.name),
+                    name: file.name.endsWith('.jfif')?file.name.slice(0,-5).concat('.jpeg'):file.name
+                }]
+            })
+        }
         console.log('meme enviado')
+        
+        
         
     } catch (error) {
         console.error(error)
