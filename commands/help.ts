@@ -5,17 +5,14 @@ import { CommandI } from "../utils/types"
 const help:CommandI = {
     exe: async function(interaction, client){
         if(interaction){
-            const commands = client.commands.map((i)=>i.data.name)
-            const strFormat = function(arr:string[]){
-                let acul = ''
-
-                arr.forEach((i)=>{acul +='- '+i+'\n'})
-                return acul
-            }
+            const commands = client.commands
             const embed = new MessageEmbed()
-                .setAuthor({name: 'discord.ts'})
-                .setDescription(strFormat(commands))
-            return await interaction.channel?.send({embeds:[embed]})
+                .setTitle('LISTA DE COMANDOS'/*strFormat(commands)*/)
+
+            commands.forEach((i)=>{
+                embed.addField(`${i.data.name}${i.perms!=undefined?` <${i.perms}>`:''}`,i.data.description)
+            })
+            return await interaction.reply({embeds:[embed]})
         }
         
     },
