@@ -1,14 +1,10 @@
 import Bot from "../structures/Bot";
-import { commandFiles, findArr } from "../utils/files";
+import { commandFiles } from "../utils/files";
 import { CommandI, EventI } from "../utils/types";
 import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
 import { memePerDay } from "../middleware/memePerDay";
 import { refreshDb } from "../middleware/refreshDb";
-import { SendMeme } from "../utils/sendMeme";
-import { prisma } from "../prisma/prisma";
-import { randomizeMemes } from "../utils/randomize";
-
 
 const ready:EventI<any> = {
     eventName:'ready',

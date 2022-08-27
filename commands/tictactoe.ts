@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { /*TextChannel, MessageReaction,*/ Interaction, Client, User, GuildMember } from "discord.js"
+import { GuildMember } from "discord.js"
 import { CommandI } from "../utils/types"
 
 type ttcNum = 0 | -1 | 1
@@ -9,14 +9,9 @@ interface Tictactoe{
         [ttcNum,ttcNum,ttcNum],
         [ttcNum,ttcNum,ttcNum],
     ]
-    // vez:boolean;
-    // interaction:Interaction;
-    // client:Client;
-    // p1:any;//todo subsituir
-    // p2:any;
 }
 class Tictactoe implements Tictactoe{
-    constructor(/*p1:User, p2:User|GuildMember, interaction:Interaction, client:Client*/){
+    constructor(){
         //declaração de variáveis da classe
         this.board = [[0,0,0],
                       [0,0,0],
@@ -98,7 +93,7 @@ const tictactoe:CommandI = {
                     await msg.delete()
                     //local onde o jogo começa
                     if(player2 instanceof GuildMember){
-                        const game = new Tictactoe(/*player1,player2, interaction, client*/)
+                        const game = new Tictactoe()
                         let rodada = 0
                         while(game.keepPlaying()){
                             while(!game.isVelha()){

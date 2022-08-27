@@ -14,9 +14,6 @@ class Bot extends Client{
         })
     }
 
-    /*start(){
-        
-    }*/
     private async loadEvents(){
         await Promise.all(eventFiles!.files!.map(async (file)=>{
             const event = (await import(eventFiles.path+'\\'+file)).default as EventI<any>;

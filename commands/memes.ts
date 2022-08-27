@@ -1,6 +1,4 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-// import { prisma } from "../prisma/prisma"
-// import { MessageEmbed } from "discord.js"
 import { CommandI } from "../utils/types"
 
 const memes:CommandI = {

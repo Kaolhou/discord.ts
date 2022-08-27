@@ -1,5 +1,5 @@
 import { prisma } from "../prisma/prisma";
-import { randomizeMemes } from "../utils/randomize";
+import { randomize } from "../utils/randomize";
 import { Client } from "discord.js";
 import { isSameDay } from "../utils/isSameDay";
 import { SendMeme } from "../utils/sendMeme";
@@ -18,7 +18,7 @@ export async function memePerDay(client:Client){
         }
     })
 
-    let selectedMeme = randomizeMemes(dbmemes);
+    let selectedMeme = randomize(dbmemes);
     
     (!dbtoday || !isSameDay(today,new Date(dbtoday.today.toString()))) ? (async()=>{ 
         try {
