@@ -14,7 +14,7 @@
     "url": "https://kaolhou-dev.vercel.app",
     "email": "xdroid42@gmail.com"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
