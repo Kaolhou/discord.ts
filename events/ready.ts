@@ -3,8 +3,7 @@ import { commandFiles } from "../utils/files";
 import { CommandI, EventI } from "../utils/types";
 import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
-import { memePerDay } from "../middleware/memePerDay";
-import { refreshDb } from "../middleware/refreshDb";
+import { runMiddleware } from "../utils/runMiddleware";
 
 const ready:EventI<any> = {
     eventName:'ready',
@@ -16,14 +15,10 @@ const ready:EventI<any> = {
                 type: 'PLAYING',
                 name:'/help'
             })
-            //nome auto-explicativo
-            await refreshDb()
-
-            //this will put a meme in meme channel 1 time per day
-            await memePerDay(client)
+            
             //* never put the middleware files into the Promise All, this will 
             //* make the middleware execute a lot of times
-            //todo a function that import all middlewares automatically
+            await runMiddleware()
 
             await Promise.all(commandFiles!.files!.map(async (file)=>{
                 const command:CommandI = (await import(commandFiles.path+'\\'+file)).default;
@@ -48,8 +43,7 @@ const ready:EventI<any> = {
             rest.put(Routes.applicationCommands(process!.env!.CLIENT_ID!/*, process!.env!.GUILD_ID!*/),{ body: commandArr })
                 .then(()=>{console.log('commands loaded')})
                 .catch((err)=>{throw new Error(err)})
-
-            console.log('bot started')
+            console.log('\x1b[32m%s\x1b[0m',`Bot started`)
         } catch (error) {
             console.error(error)
         }

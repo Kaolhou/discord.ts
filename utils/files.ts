@@ -23,5 +23,7 @@ export function findArr(path:string, ext:string = ''):string[]{
 }
 const commandFiles:findI = find('commands')
 const eventFiles:findI = find('events')
+const middleware:findI = find('middleware')
 
-export {commandFiles, eventFiles}
+
+export {commandFiles, eventFiles, middleware}

@@ -4,7 +4,7 @@ import { Client } from "discord.js";
 import { isSameDay } from "../utils/isSameDay";
 import { SendMeme } from "../utils/sendMeme";
 
-export async function memePerDay(client:Client){
+export default async function memePerDay(client:Client){
 
     const today = new Date()
     const dbtoday = await prisma.date.findFirst({

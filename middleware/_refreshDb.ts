@@ -1,8 +1,9 @@
 import { prisma } from "../prisma/prisma"
 import { findArr } from "../utils/files"
 import path from 'path'
+import { middlewareType } from "../utils/types"
 
-export async function refreshDb(){
+const refreshDb:middlewareType = async function(){
     try {
         //this will refresh db
         const files = findArr(path.resolve(process.env!.PATH_MEMES!)).map((i)=>i.split('\\').slice(-1)[0])
@@ -35,3 +36,4 @@ export async function refreshDb(){
         process.exit(1)
     }
 }
+export default refreshDb 

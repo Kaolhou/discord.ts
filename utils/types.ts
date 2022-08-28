@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { ClientEvents, CommandInteraction, PermissionResolvable } from "discord.js";
+import { Client, ClientEvents, CommandInteraction, Interaction, PermissionResolvable } from "discord.js";
 import Bot from "../structures/Bot";
 
 export interface CommandI{
@@ -19,3 +19,4 @@ export interface findI{
     path: string;
     files: string[];
 }
+export type middlewareType = (client?:Client,interaction?:Interaction)=>void|Promise<void>
