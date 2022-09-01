@@ -50,7 +50,6 @@ const setnsfw:CommandI = {
             collector?.on('end',async(collection)=>{
                 await msg?.delete()
                 collection.forEach(async(click)=>{
-                    // console.log(click.customId)
                     if(click.customId === 'close'){
                         console.log('setter close')
                     }else if(click.customId === 'yes'){
@@ -91,18 +90,6 @@ const setnsfw:CommandI = {
     data: new SlashCommandBuilder()
         .setName('setnsfw')
         .setDescription('edit a nsfw meme'),
-        /*.addStringOption(
-            option=>option
-                .setName('tags')
-                .setDescription('select a tag for memes')
-                .setRequired(true)
-        )
-        .addBooleanOption(
-            option=>option
-                .setName('nsfw')
-                .setDescription('accept nsfw/sensitive content')
-                .setRequired(true)
-        )*/
     perms:['ADMINISTRATOR']
 }
 export default setnsfw

@@ -41,15 +41,13 @@ export default async function memePerDay(client:Client){
                         send:true
                     }
                 }))){
-                    console.log(client)
                     await SendMeme(client,selectedMeme)
                     console.log('enviou')
                 }
                 console.log('nada de meme no db, alterando')
             }
             if(dbtoday && !isSameDay(today,new Date(dbtoday.today.toString()))){
-                console.log(dbtoday,!isSameDay(today,new Date(dbtoday.today.toString())))
-                console.log(client)
+                // console.log(dbtoday,!isSameDay(today,new Date(dbtoday.today.toString())))
                 await SendMeme(client,selectedMeme)
                 await prisma.date.create({
                     data:{
