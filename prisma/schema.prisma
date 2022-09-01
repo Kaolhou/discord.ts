@@ -22,6 +22,8 @@ model Memes {
   name String @unique
   send Boolean @default(false)
   tags String[] @default(["init"])
+  nsfw Boolean @default(false)
+  manuallySelected Boolean @default(false)
 
   @@map("memes")
 }

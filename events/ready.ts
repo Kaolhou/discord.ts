@@ -18,7 +18,7 @@ const ready:EventI<any> = {
             
             //* never put the middleware files into the Promise All, this will 
             //* make the middleware execute a lot of times
-            await runMiddleware()
+            await runMiddleware(client)
 
             await Promise.all(commandFiles!.files!.map(async (file)=>{
                 const command:CommandI = (await import(commandFiles.path+'\\'+file)).default;

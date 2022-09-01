@@ -12,7 +12,7 @@ const interactionCreate:EventI<any> = {
             const command = client.commands.get(interaction.commandName)
             command?.exe(interaction,client)
         }
-        await runMiddleware()
+        await runMiddleware(client)
     }
 }
 export default interactionCreate

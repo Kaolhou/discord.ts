@@ -20,10 +20,9 @@ export async function SendMeme(client:Client, file? :Memes){
         JSON.parse(data).forEach((el:string) => {
             jsobj.push(el)
         })
-        
-        // console.log(jsobj)
+                        
         for(let i=0;i<jsobj.length;i++){
-            const channel = client.channels.cache.find(ch => ch.id === jsobj[i])
+            const channel = client.channels?.cache.find(ch => ch.id === jsobj[i])
             channel?.isText() && await channel.send({
                 files: [{
                     attachment: path.resolve(process.env!.PATH_MEMES!, file.name),
@@ -32,7 +31,6 @@ export async function SendMeme(client:Client, file? :Memes){
             })
         }
         console.log('meme enviado')
-        
         
         
     } catch (error) {
