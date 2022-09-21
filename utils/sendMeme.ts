@@ -10,7 +10,8 @@ export async function SendMeme(client:Client, file? :Memes){
         if(!file){
             const dbmemes = await prisma.memes.findMany({
                 where:{
-                    send: false
+                    send: false,
+                    nsfw: false
                 }
             })
             file = randomize(dbmemes);

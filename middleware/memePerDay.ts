@@ -14,7 +14,8 @@ export default async function memePerDay(client:Client){
     })
     const dbmemes = await prisma.memes.findMany({
         where:{
-            send: false
+            send: false,
+            nsfw: false
         }
     })
 

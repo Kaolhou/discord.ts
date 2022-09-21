@@ -76,131 +76,139 @@ const tictactoe:CommandI = {
 
             const player1 = interaction.user
             const player2 = interaction.options.getMentionable('user') // mentionated user
-            
-            await interaction.channel?.send({content:`${player2}, por favor reaja a essa mensagem para poder jogar`,})
-            .then(async(msg)=>{
-                await msg?.react('✅')
-                return msg?.awaitReactions(
-                    {
-                        max: 1, 
-                        time: ms, 
-                        errors: ["time"], 
-                        filter:
-                            (reaction, userR) => {
-                                return userR.id == player2?.valueOf() && reaction.emoji.name =="✅"}
-                    }
-                ).then(async(collected)=>{
-                    await msg.delete()
-                    //local onde o jogo começa
-                    if(player2 instanceof GuildMember){
-                        const game = new Tictactoe()
-                        let rodada = 0
-                        while(game.keepPlaying()){
-                            while(!game.isVelha()){
-                                let vez = rodada%2==0 ? player1 : player2
-                                let gameMsg = await interaction.channel?.send(game.render(rodada))
-                                await gameMsg?.react('⬅️')
-                                await gameMsg?.react('↖️')
-                                await gameMsg?.react('⬆️')
-                                await gameMsg?.react('↗️')
-                                await gameMsg?.react('➡️')
-                                await gameMsg?.react('↘️')
-                                await gameMsg?.react('⬇️')
-                                await gameMsg?.react('↙️')
-                                await gameMsg?.react('⏺️')
-                                let adsas = await gameMsg?.awaitReactions(
-                                    {
-                                        max: 1, 
-                                        time: ms, 
-                                        errors: ["time"], 
-                                        filter:
-                                            (reaction, userR) => 
-                                                userR.id == vez.id//(rodada%2==0 ? player1.id : player2.id)
-                                            
-                                    }
-                                )
-                                switch(adsas?.toJSON()[0].emoji.name){
-                                    case '↖️':
-                                        game.board[0][0]==0?
-                                        game.board[0][0]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '⬆️':
-                                        game.board[0][1]==0?
-                                        game.board[0][1]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '↗️':
-                                        game.board[0][2]==0?
-                                        game.board[0][2]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '⬅️':
-                                        game.board[1][0]==0?
-                                        game.board[1][0]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '⏺️':
-                                        game.board[1][1]==0?
-                                        game.board[1][1]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '➡️':
-                                        game.board[1][2]==0?
-                                        game.board[1][2]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '↙️':
-                                        game.board[2][0]==0?
-                                        game.board[2][0]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '⬇️':
-                                        game.board[2][1]==0?
-                                        game.board[2][1]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    case '↘️':
-                                        game.board[2][2]==0?
-                                        game.board[2][2]=(rodada%2==0?1:-1):
-                                        rodada-=1
-                                        break;
-
-                                    default: break;
-                                            
-                                    
-                                }
-                                await gameMsg?.delete()
-                                if(!game.keepPlaying()){
-                                    interaction.channel?.send(`player ${rodada%2==0?player1.username:player2.nickname} win`)
-                                    await interaction.channel?.send(game.render(rodada))
-                                    console.log(`player ${rodada%2==0?1:-1} win`)
-                                }
-                                if(game.isVelha()){
-                                    await interaction.channel?.send('velha!!')
-                                    await interaction.channel?.send(game.render(rodada))
-
-                                }
-                                rodada++
-                            }
+            if(player2 instanceof GuildMember){
+                await interaction.channel?.send({content:`${player2}, por favor reaja a essa mensagem para poder jogar`,})
+                .then(async(msg)=>{
+                    await msg?.react('✅')
+                    return msg?.awaitReactions(
+                        {
+                            max: 1, 
+                            time: ms, 
+                            errors: ["time"], 
+                            filter:
+                                (reaction, userR) => {
+                                    return userR.id == player2?.valueOf() && reaction.emoji.name =="✅"}
                         }
+                    ).then(async(/*collected*/)=>{
+                        await msg.delete()
+                        //local onde o jogo começa
+                        if(player2 instanceof GuildMember){
+                            if(client.users.cache.get(player2.id)?.bot){
+                                return await interaction.reply({
+                                    content:'cannot play with bots',
+                                    ephemeral: true
+                                })
+                            }
+                            const game = new Tictactoe()
+                            let rodada = 0
+                            while(game.keepPlaying()){
+                                while(!game.isVelha()){
+                                    let vez = rodada%2==0 ? player1 : player2
+                                    let gameMsg = await interaction.channel?.send(game.render(rodada))
+                                    await gameMsg?.react('⬅️')
+                                    await gameMsg?.react('↖️')
+                                    await gameMsg?.react('⬆️')
+                                    await gameMsg?.react('↗️')
+                                    await gameMsg?.react('➡️')
+                                    await gameMsg?.react('↘️')
+                                    await gameMsg?.react('⬇️')
+                                    await gameMsg?.react('↙️')
+                                    await gameMsg?.react('⏺️')
+                                    let adsas = await gameMsg?.awaitReactions(
+                                        {
+                                            max: 1, 
+                                            time: ms, 
+                                            errors: ["time"], 
+                                            filter:
+                                                (reaction, userR) => 
+                                                    userR.id == vez.id//(rodada%2==0 ? player1.id : player2.id)
+                                                
+                                        }
+                                    )
+                                    switch(adsas?.toJSON()[0].emoji.name){
+                                        case '↖️':
+                                            game.board[0][0]==0?
+                                            game.board[0][0]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
 
-                        
-                    }
+                                        case '⬆️':
+                                            game.board[0][1]==0?
+                                            game.board[0][1]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '↗️':
+                                            game.board[0][2]==0?
+                                            game.board[0][2]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '⬅️':
+                                            game.board[1][0]==0?
+                                            game.board[1][0]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '⏺️':
+                                            game.board[1][1]==0?
+                                            game.board[1][1]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '➡️':
+                                            game.board[1][2]==0?
+                                            game.board[1][2]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '↙️':
+                                            game.board[2][0]==0?
+                                            game.board[2][0]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '⬇️':
+                                            game.board[2][1]==0?
+                                            game.board[2][1]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        case '↘️':
+                                            game.board[2][2]==0?
+                                            game.board[2][2]=(rodada%2==0?1:-1):
+                                            rodada-=1
+                                            break;
+
+                                        default: break;
+                                                
+                                        
+                                    }
+                                    await gameMsg?.delete()
+                                    if(!game.keepPlaying()){
+                                        interaction.channel?.send(`player ${rodada%2==0?player1.username:player2.nickname} win`)
+                                        await interaction.channel?.send(game.render(rodada))
+                                        console.log(`player ${rodada%2==0?1:-1} win`)
+                                    }
+                                    if(game.isVelha()){
+                                        await interaction.channel?.send('velha!!')
+                                        await interaction.channel?.send(game.render(rodada))
+
+                                    }
+                                    rodada++
+                                }
+                            }
+
+                            
+                        }
+                    })
+                    
+                }).catch((e)=>{
+                    console.log(e)
                 })
-            }).catch((e)=>{
-                console.log(e)
-            })
-            await new Promise(r => setTimeout(r, ms))
-
+            }else{
+                interaction.reply('mencione apenas usuários')
+            }         
         }
     },
     data: new SlashCommandBuilder()
