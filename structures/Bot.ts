@@ -2,10 +2,13 @@ import { config } from "dotenv"; config()
 import { Client, ClientOptions, Collection } from 'discord.js'
 import { CommandI, EventI } from "../utils/types";
 import { eventFiles } from "../utils/files";
+import { BotCommand } from "./BotCommand";
 
 
 class Bot extends Client{
     commands = new Collection<string, CommandI>()
+    //* futuramente substituir por OOP
+    // commands = new Collection<string,BotCommand>() 
 
     constructor(options:ClientOptions){
         super(options)
