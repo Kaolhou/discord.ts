@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "build": "tsc",
-    "start": "nodemon dist/index.js"
+    "start": "nodemon dist/index.js",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": {
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.13",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "vitest": "^0.23.4"
   }
 }

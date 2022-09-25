@@ -13,10 +13,10 @@ export const TypedEvent = <T extends EventName>(event: EventI<T>) => event;
 export interface EventI<T extends EventName>{
     eventName: T;
     once: boolean;
-    run: (client: Bot,...args:ClientEvents[T])=>any;
+    run: (client: Bot,...args:ClientEvents[T])=>any|Promise<any>;
 }
 export interface findI{
     path: string;
     files: string[];
 }
-export type middlewareType = (client?:Client,interaction?:Interaction)=>void|Promise<void>
+export type middlewareType = (client?:Client,interaction?:Interaction)=>void//|Promise<void>

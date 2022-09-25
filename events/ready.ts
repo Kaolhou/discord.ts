@@ -1,14 +1,14 @@
 import Bot from "../structures/Bot";
 import { commandFiles } from "../utils/files";
-import { CommandI, EventI } from "../utils/types";
+import { CommandI, TypedEvent } from "../utils/types";
 import { REST } from '@discordjs/rest'
 import { Routes } from "discord-api-types/v10";
 import { runMiddleware } from "../utils/runMiddleware";
 
-const ready:EventI<any> = {
-    eventName:'ready',
+export default TypedEvent({
     once:true,
-    async run(client:Bot){
+    eventName:'ready',
+    run:async(client:Bot)=>{
         try {
             const commandArr: Array<CommandI> = [];
             client.user?.setActivity({
@@ -48,5 +48,4 @@ const ready:EventI<any> = {
             console.error(error)
         }
     }
-}
-export default ready
+})

@@ -6,6 +6,6 @@ import { middlewareType } from "./types";
 export async function runMiddleware(client:Client){
     await Promise.all(middleware.files.map(async(file)=>{
         const mid = (await import(middleware.path+'\\'+file)).default as middlewareType
-        await mid(client)
+        mid(client)
     }))
 }
