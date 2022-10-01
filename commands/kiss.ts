@@ -5,23 +5,27 @@ import kissJson from '../data/kiss.json'
 
 const kiss:CommandI = {
     exe: async function(interaction){
-        if(interaction){
-            const person = interaction.options.getMentionable('person')
-            if(interaction.user.id==person?.valueOf())return await interaction.reply({
-                ephemeral:true,
-                content: 'Você não pode mencionar a si mesmo'
-            })
-            const arrOfRes = [
-                `ops!! ${interaction.user.username} acaba de beijar ${person}`,
-                `uiii ${interaction.user.username} beijou ${person}❤❤`,
-                //todo criar mais respostas
-            ]
-
-            await interaction.channel?.send({
-                content: randomize(arrOfRes),
-                files:[randomize(kissJson)]
-            })
-            //todo enviar foto anexada de personagens de anime se beijando
+        try {
+            if(interaction){
+                const person = interaction.options.getMentionable('person')
+                if(interaction.user.id==person?.valueOf())return await interaction.editReply({
+                    content: 'Você não pode mencionar a si mesmo'
+                })
+                const arrOfRes = [
+                    `ops!! ${interaction.user.username} acaba de beijar ${person}`,
+                    `uiii ${interaction.user.username} beijou ${person}❤❤`,
+                    //todo criar mais respostas
+                ]
+    
+                await interaction.channel?.send({
+                    content: randomize(arrOfRes),
+                    files:[randomize(kissJson)]
+                })
+                //todo enviar foto anexada de personagens de anime se beijando
+            }
+        } catch (error) {
+            console.error(error)
+            interaction.deleteReply()
         }
         
     },

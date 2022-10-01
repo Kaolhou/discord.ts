@@ -11,7 +11,15 @@ export default TypedEvent({
         if (!interaction.inCachedGuild()) return;
         if(interaction.isCommand()){
             const command = client.commands.get(interaction.commandName)
-            command?.exe(interaction,client)
+            if(interaction.memberPermissions.has(command?.perms!)){
+                interaction.deferReply().then(()=>{
+                    command?.exe(interaction,client)
+                })
+            }else{
+                interaction.editReply({
+                    content:'você não tem permissão para executar esse comando'
+                })
+            }
         }
         await runMiddleware(client)
     }

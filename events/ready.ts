@@ -44,6 +44,7 @@ export default TypedEvent({
                 .then(()=>{console.log('commands loaded')})
                 .catch((err)=>{throw new Error(err)})
             console.log('\x1b[32m%s\x1b[0m',`Bot started`)
+            console.log(commandArr.length)
         } catch (error) {
             console.error(error)
         }

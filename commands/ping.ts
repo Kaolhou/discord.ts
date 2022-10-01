@@ -3,8 +3,13 @@ import { CommandI } from "../utils/types"
 
 const ping:CommandI = {
     exe: async function(interaction, client){
-        if(interaction){
-            await interaction.reply(`Pong 🏓🏓\n${client.ws.ping}ms`)
+        try {
+            if(interaction){
+                await interaction.editReply(`Pong 🏓🏓\n${client.ws.ping}ms`)
+            }
+        } catch (error) {
+            console.error(error)
+            interaction.deleteReply()
         }
     },
     data: new SlashCommandBuilder()

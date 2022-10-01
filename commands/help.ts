@@ -4,15 +4,20 @@ import { CommandI } from "../utils/types"
 
 const help:CommandI = {
     exe: async function(interaction, client){
-        if(interaction){
-            const commands = client.commands
-            const embed = new MessageEmbed()
-                .setTitle('LISTA DE COMANDOS'/*strFormat(commands)*/)
-
-            commands.forEach((i)=>{
-                embed.addField(`${i.data.name}${i.perms!=undefined?` <${i.perms}>`:''}`,i.data.description)
-            })
-            return await interaction.reply({embeds:[embed]})
+        try {
+            if(interaction){
+                const commands = client.commands
+                const embed = new MessageEmbed()
+                    .setTitle('LISTA DE COMANDOS'/*strFormat(commands)*/)
+    
+                commands.forEach((i)=>{
+                    embed.addField(`${i.data.name}${i.perms!=undefined?` <${i.perms}>`:''}`,i.data.description)
+                })
+                return await interaction.editReply({embeds:[embed]})
+            }
+        } catch (error) {
+            console.error(error)
+            interaction.deleteReply()
         }
         
     },

@@ -6,42 +6,40 @@ const memesChat:CommandI = {
     exe: async function(interaction, client){
         if(interaction){
             try {
-                if(interaction.memberPermissions?.has('ADMINISTRATOR')){
-                    let channel = interaction.options.getString('input')
-                    let CChannel = client.channels.cache.get(channel!)
-                    if(!CChannel) return interaction.reply({
-                        ephemeral:true,
-                        content: 'canal inválido'
-                    }) 
-                    if(!CChannel?.isText()) return interaction.reply({
-                        ephemeral:true,
-                        content: 'canal inválido'
-                    })
-                    fs.readFile('chats.conf','utf-8',(err,data)=>{
-                        if(err) throw new Error(String(err))
-                        
-                        let js:string[] = JSON.parse(data);
-                        if(js.find((i)=>i==channel)) {
-                            interaction.channel?.send({
-                                content: 'não pode incluir canal ja incluido',
-                            })
-                        }else{
-                            js.push(channel!)
-                            fs.writeFileSync('chats.conf',JSON.stringify(js)) 
-                            return interaction.reply({
-                                content:`${CChannel?.id} adicionado com sucesso`,
-                                ephemeral:true
-                            })   
-                        }
+                // if(interaction.memberPermissions?.has('ADMINISTRATOR')){
+                let channel = interaction.options.getString('input')
+                let CChannel = client.channels.cache.get(channel!)
+                if(!CChannel) return interaction.editReply({
+                    content: 'canal inválido'
+                }) 
+                if(!CChannel?.isText()) return interaction.editReply({
+                    content: 'canal inválido'
+                })
+                fs.readFile('chats.conf','utf-8',(err,data)=>{
+                    if(err) throw new Error(String(err))
+                    
+                    let js:string[] = JSON.parse(data);
+                    if(js.find((i)=>i==channel)) {
+                        interaction.channel?.send({
+                            content: 'não pode incluir canal ja incluido',
+                        })
+                    }else{
+                        js.push(channel!)
+                        fs.writeFileSync('chats.conf',JSON.stringify(js)) 
+                        return interaction.editReply({
+                            content:`${CChannel?.id} adicionado com sucesso`,
+                        })   
+                    }
 
-                    });
-                }else{
-                    interaction.reply({
-                        ephemeral:true,
-                        content:'você não tem permissão de alterar o canal de meme'
-                    })
-                }
+                });
+                // }else{
+                //     interaction.reply({
+                //         ephemeral:true,
+                //         content:'você não tem permissão de alterar o canal de meme'
+                //     })
+                // }
             } catch (error) {
+                interaction.deleteReply()
                 console.error(error)
             }
         } 
