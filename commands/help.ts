@@ -1,8 +1,9 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import reply from "../util/reply";
 import { CommandI } from "../util/types";
 
 const help:CommandI = {
-    exe(interaction, client) {
+    async exe(interaction, client) {
         if(interaction){
             const info = new EmbedBuilder()
                 .setTitle('Help')
@@ -38,8 +39,8 @@ const help:CommandI = {
                         value:'show the locale ping'
                     }
                 ])
-
-            interaction.reply({
+            
+            await reply(interaction,{
                 embeds:[info,musics,etc]
             })
         }

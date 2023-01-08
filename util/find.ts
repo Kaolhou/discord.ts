@@ -8,11 +8,8 @@ function find(path:string){
 
 var events = find('events')
 var commands = find('commands')
+
 export {
-    
-    // find,
-    // findArr,
     events,
     commands
-
 }

@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from "discord.js";
 import { Main } from "..";
-import { AudioPlayer, AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from "@discordjs/voice";
 import play, { SoundCloudTrack, YouTubeVideo } from 'play-dl'; 
 import reply from "../util/reply";
 
@@ -14,21 +14,26 @@ interface SoundOptions{
 export default class Music {
 
     private client:Main
-    private interaction
+    //private interaction
     private player:AudioPlayer = createAudioPlayer()
     public queue: SoundOptions[] = []
     public isPlaying = false
     private guild
-    public connection
+    public connection:VoiceConnection|undefined
     
     constructor(client:Main,interaction:CommandInteraction){
-        interaction.deferReply()
+        //async function top level not allowed
+        //(async ()=>await interaction.deferReply())()
         this.client = client
-        this.interaction = interaction
-        this.guild = this.client.guilds.cache.get(this.interaction.guildId!)
-        let member = this.guild?.members.cache.get(this.interaction.user.id)
+        //this.interaction = interaction
+        this.guild = this.client.guilds.cache.get(interaction.guildId!)
+        this.connect(interaction)
+        //this.connection?.subscribe(this.player)
+    }
+    private connect(interaction:CommandInteraction){
         
-        if(this.isUserConnected()){
+        let member = this.guild?.members.cache.get(interaction.user.id)
+        if(this.isUserConnected(interaction)){
             if(member?.voice.channel?.joinable){
                 this.connection = joinVoiceChannel({
                     guildId: this.guild!.id,
@@ -41,12 +46,11 @@ export default class Music {
         }else{
             reply(interaction,{message:'usuário não conectado em canal de voz'})
         }
-        //this.connection?.subscribe(this.player)
     }
 
-    public isUserConnected(){
-        let guild = this.client.guilds.cache.get(this.interaction.guildId!)
-        let member = guild?.members.cache.get(this.interaction.user.id)
+    public isUserConnected(interaction:CommandInteraction){
+        let guild = this.client.guilds.cache.get(interaction.guildId!)
+        let member = guild?.members.cache.get(interaction.user.id)
         if(guild){
             this.guild = guild
         }
@@ -103,6 +107,12 @@ export default class Music {
         this.isPlaying = true
         this.player.unpause()
     }
+    public next(){
+        this.isPlaying = false
+        this.player.stop()
+        this.queue.shift()
+        this.playMusic()
+    }
 
     public async playMusic(){
         if(this.queue[0] && await play.validate(this.queue[0].link)){
@@ -118,7 +128,6 @@ export default class Music {
             }
 
             this.connection?.subscribe(this.player)
-
             this.player.on(AudioPlayerStatus.Idle,()=>{
                 this.queue.shift()
                 this.playMusic()

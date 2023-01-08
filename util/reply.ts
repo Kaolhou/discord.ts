@@ -2,10 +2,14 @@ import { CommandInteraction } from "discord.js";
 import { InteractionReplyOptions,InteractionEditReplyOptions } from "discord.js";
 
 type Options = InteractionReplyOptions & InteractionEditReplyOptions
-export default function reply(interaction:CommandInteraction,options:Options){
+export default async function reply(interaction:CommandInteraction,options:Options){
     if(interaction.deferred){
-        interaction.editReply(options)
+        await interaction.editReply(options)
+        
     }else{
-        interaction.reply(options)
+        await interaction.reply(options)
+    }
+    if(interaction.replied){
+        await interaction.followUp(options)
     }
 }

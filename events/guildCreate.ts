@@ -1,7 +1,11 @@
 import { ChannelType, TextChannel } from "discord.js";
 import { EventI } from "../util/types";
 
-
+/**
+ * Evento responsável por enviar uma mensagem de agradecimento no primeiro canal de texto do servidor
+ * convidado disponível, ainda há alterações a serem feitas pois o bot pode disparar um erro por não ter
+ * permissão de mandar mensagem
+ */
 const guildCreate:EventI<'guildCreate'> ={
     //todo modificar
     eventName:'guildCreate',

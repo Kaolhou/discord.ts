@@ -6,6 +6,11 @@ import { config } from "dotenv";config()
 import path from 'path'
 import { Main } from "..";
 
+/**
+ * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
+ * faz uma requisição REST de protocolo PUT para enviar os slash commands para o discord e 
+ * coloca todos os comandos para dentro do client
+ */
 const ready:EventI<'ready'> = {
     eventName:'ready',
     async exe(client:Main) {
@@ -14,8 +19,8 @@ const ready:EventI<'ready'> = {
         const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 
         await Promise.all(commands.map(async (file)=>{
+            
             const command = (await import(path.resolve(__dirname,'..','commands',file))).default as CommandI;
-            //console.log(command)
             if (!command) {
                 console.error(
                     `File at path ${file} seems to incorrectly be exporting an event.`
