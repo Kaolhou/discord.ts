@@ -36,6 +36,10 @@ const help:CommandI = {
                     {
                         name:'stop',
                         value:'stop the music'
+                    },
+                    {
+                        name:'remove',
+                        value:'remove a item from queue'
                     }
                 ])
             const etc = new EmbedBuilder()
@@ -45,6 +49,10 @@ const help:CommandI = {
                     {
                         name:'ping',
                         value:'show the locale ping'
+                    },
+                    {
+                        name:'meme',
+                        value:'show a meme'
                     }
                 ])
             
