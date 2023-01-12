@@ -9,7 +9,7 @@ const pause:CommandI = {
         if(interaction){
             music.music?.pause()
             await reply(interaction,{
-                message:':pause_button:music paused'
+                content:':pause_button:music paused'
             })
             await new Promise(resolve => setTimeout(resolve, 10*1000))
             await interaction.deleteReply()

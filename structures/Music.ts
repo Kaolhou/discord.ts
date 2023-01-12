@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from "discord.js";
 import { Main } from "..";
-import { AudioPlayer, AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from "@discordjs/voice";
 import play, { SoundCloudTrack, YouTubeVideo } from 'play-dl'; 
 import reply from "../util/reply";
 
@@ -9,12 +9,13 @@ interface SoundOptions{
     title:string
     platform: false | "so_playlist" | "so_track" | "sp_track" | "sp_album" | "sp_playlist" | "dz_track" | "dz_playlist" | "dz_album" | "yt_video" | "yt_playlist" | "search"
     video_details: YouTubeVideo | SoundCloudTrack
+    audioResource:AudioResource
 }
 
 export default class Music {
 
     private client:Main
-    //private interaction
+    public channel:string=''
     private player:AudioPlayer = createAudioPlayer()
     public queue: SoundOptions[] = []
     public isPlaying = false
@@ -22,10 +23,7 @@ export default class Music {
     public connection:VoiceConnection|undefined
     
     constructor(client:Main,interaction:CommandInteraction){
-        //async function top level not allowed
-        //(async ()=>await interaction.deferReply())()
         this.client = client
-        //this.interaction = interaction
         this.guild = this.client.guilds.cache.get(interaction.guildId!)
         this.connect(interaction)
         //this.connection?.subscribe(this.player)
@@ -54,8 +52,12 @@ export default class Music {
         if(guild){
             this.guild = guild
         }
+        if(Boolean(member?.voice.channel?.id)){
+            this.channel = member?.voice.channel?.id!
+            return true
+        }
         
-        return Boolean(member?.voice.channel)
+        return false
     }
 
     public async addToQueue(interaction:CommandInteraction,link:string){
@@ -68,15 +70,20 @@ export default class Music {
             var embed = new EmbedBuilder()
                 .setURL(video_details.url)
                 .setAuthor({name:video_details.channel?.name!,iconURL:video_details.channel?.iconURL(),url:video_details.channel?.url})
-                .setDescription(video_details.description==undefined?null:video_details.description.substring(0,250)+'...')
+                .setDescription(video_details.description==undefined?'(no description were provided)':video_details.description.substring(0,250).length==250?video_details.description.substring(0,250)+'...':video_details.description)
                 .setTitle(video_details.title==undefined?null:video_details.title)
                 .setThumbnail(video_details.thumbnails[0].url)
+
+            const video = await play.stream(/*this.queue[0].link*/link)
 
             let music = {
                 link,
                 video_details,
                 platform: type,
-                title: video_details.title
+                title: video_details.title,
+                audioResource: createAudioResource(video.stream,{
+                    inputType:video.type
+                })
             } as SoundOptions
 
             this.queue.push(music)
@@ -118,13 +125,10 @@ export default class Music {
         if(this.queue[0] && await play.validate(this.queue[0].link)){
             
             if(play.yt_validate(this.queue[0].link)){
-                const video = await play.stream(this.queue[0].link)
 
                 this.isPlaying = true
 
-                this.player.play(createAudioResource(video.stream,{
-                    inputType:video.type
-                }))
+                this.player.play(this.queue[0].audioResource)
             }
 
             this.connection?.subscribe(this.player)

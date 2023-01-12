@@ -8,7 +8,7 @@ const unpause:CommandI = {
         if(interaction){
             music.music?.continue()
             await reply(interaction,{
-                message:':arrow_forward:continue music'
+                content:':arrow_forward:continue music'
             })
             await new Promise(resolve => setTimeout(resolve, 10*1000))
             await interaction.deleteReply()

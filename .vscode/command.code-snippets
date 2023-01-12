@@ -1,0 +1,35 @@
+{
+	// Place your bot_maker workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"command": {
+		"scope": "javascript,typescript",
+		"prefix": "command",
+		"body": [
+			"import { SlashCommandBuilder } from \"discord.js\"",
+			"import { CommandI } from \"../util/types\"",
+			"",
+			"const ${1:commandName}:CommandI = {",
+			"   async exe(interaction,client){",
+			"       //code",
+			"   },",
+			"   data: new SlashCommandBuilder()",
+			"       .setName('$3')",
+			"       .setDescription('$4')",
+			"}",
+			"export default ${1:commandName}"
+		],
+		"description": "initial command file"
+	},
+	"adsads":{
+		"scope": "javascript,typescript",
+		"prefix": "event",
+		"body": [
+			
+		]
+	}
+}

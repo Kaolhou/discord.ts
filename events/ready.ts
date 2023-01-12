@@ -1,10 +1,11 @@
-import { Routes } from "discord.js";
+import { ActivityType, Routes } from "discord.js";
 import {REST} from '@discordjs/rest'
 import { CommandI, EventI } from "../util/types"
 import { commands } from "../util/find";
 import { config } from "dotenv";config()
 import path from 'path'
 import { Main } from "..";
+import ping from "../commands/ping";
 
 /**
  * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
@@ -30,7 +31,7 @@ const ready:EventI<'ready'> = {
             client.commands.set(command.data.name, command)
 
             var imports: Array<any> = [];
-
+            console.log(`\x1b[33m%s\x1b[0m`,`[commands] ${command.data.name} loaded`)
             imports.push(command);
             imports.map((i) => {
                 commandArr.push(i.data.toJSON());
@@ -48,12 +49,24 @@ const ready:EventI<'ready'> = {
             { body: commandArr }
             )
             .then(() => {
-                console.log("commands loaded");
+                console.log(`\x1b[32m%s\x1b[0m`,`[commands] all commands loaded and submitted to discord`)
+                //console.log("commands loaded");
             })
             .catch((err) => {
                 throw new Error(err);
             })
-        console.log("bot started")
+            console.log(`\x1b[32m%s\x1b[0m`,`[ready] bot started`)
+            while(true){
+                client.user?.setPresence({
+                    activities:[{
+                        name:'/help',
+                        type:ActivityType.Playing
+                    }]
+                })
+                console.log(`[websocket] ping: ${client.ws.ping}`)
+                await new Promise(resolve => setTimeout(resolve, 1000*35))
+            }
+            // console.log("bot started")
     },
     once:true
 }

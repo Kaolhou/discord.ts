@@ -6,12 +6,18 @@ import { CommandI } from "../util/types";
 
 
 const play:CommandI = {
+    /**
+     * essa definição music receberia o objeto da classe Music que poderia ser acessada por qualquer
+     * outro arquivo do projeto com a finalidade de um comando de música poder alterar o estado de
+     * uma voice connection dentro da classe
+     */
     music:undefined,
     async exe(interaction, client) {
 
         let connection = client.connections.get(interaction.guildId!)
         let musicToQueue = interaction.options.get('url',true).value as string
 
+        //se não houver uma conexão de voz, então ela é feita, caso tenha, então apenas adiciona a música na fila
         if(connection){
 
             this.music = connection

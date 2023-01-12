@@ -6,7 +6,7 @@ type eventName = keyof ClientEvents
 //type 
 export interface CommandI{
     data: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
-    exe: (interaction: CommandInteraction, client: Main)=>unknown
+    exe: (interaction: CommandInteraction, client: Main)=>Promise<unknown>|unknown
     perms?:PermissionResolvable
     music?:Music
 }

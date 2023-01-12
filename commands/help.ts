@@ -28,6 +28,14 @@ const help:CommandI = {
                     {
                         name:"queue",
                         value:"show the music queue"
+                    },  
+                    {
+                        name:'next',
+                        value:'skips the song'
+                    },
+                    {
+                        name:'stop',
+                        value:'stop the music'
                     }
                 ])
             const etc = new EmbedBuilder()

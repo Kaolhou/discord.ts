@@ -5,6 +5,7 @@ declare global{
             DATABASE_URL?:string
             CLIENT_ID?:string
             ADMS?:string
+            MEME_ENDPOINT:string
         }
     }
 }
