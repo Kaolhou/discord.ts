@@ -10,7 +10,7 @@ Se estiver interessado no projeto pode iniciar em sua máquina seguindo as segui
 
     * CLIENT_ID **`Disponibilizado pelo discord`**
     * TOKEN **`Disponibilizado pelo discord`**
-    * GUILD_ID **`Id do servidor Discord`**
+    <!-- * GUILD_ID **`Id do servidor Discord`** -->
     * MEME_ENDPOINT **`Rota para api externa de memes`**
     * ADMS **`Array em string contendo o id dos administradores (ainda sem utilidade mas é obrigatório)`**
     <!-- * PATH_MEMES **`Caminho que leva à pasta de memes`** -->
