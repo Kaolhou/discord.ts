@@ -5,7 +5,6 @@ import { commands } from "../util/find";
 import { config } from "dotenv";config()
 import path from 'path'
 import { Main } from "..";
-import ping from "../commands/ping";
 
 /**
  * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
