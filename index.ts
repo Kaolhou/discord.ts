@@ -4,15 +4,21 @@ import { CommandI, EventI } from "./util/types";
 import { config } from "dotenv";
 import Music from "./structures/Music";
 import { PrismaClient } from "@prisma/client";
+import { NoEventsProvided } from "./structures/Errors";
 config()
+interface MainOptions extends ClientOptions{
+    verbose?:boolean
+}
 export class Main extends Client{
     commands = new Collection<string, CommandI>() //commands array
     connections = new Collection<string, Music>() //voice connections array
-    prisma = new PrismaClient()
+    prisma = new PrismaClient()                   //database
     administrators = this.loadAdm() 
+    verbose = false
     
-    constructor(options:ClientOptions){
+    constructor(options:MainOptions){
         super(options)
+        this.verbose = Boolean(options.verbose)
         this.loadAdm()
         this.loadEvents()
         this.login(process.env!.TOKEN!)
@@ -23,11 +29,18 @@ export class Main extends Client{
      * `utils/types.ts`
      */
     public async loadEvents(){
-        
+        if(events.length==0){
+            throw new NoEventsProvided(
+                `No event files were provided at
+                ${__dirname+__filename},
+                please check your events folder`
+            )
+        }
         await Promise.all(events.map(async (file)=>{
             const event = (await import(__dirname+'\\'+'events'+'\\'+file)).default as EventI<any>;
             if (!event) {
                 console.error(
+                    "\x1b[30m%s\x1b[0m",
                     `File at path ${file} seems to incorrectly be exporting an event.`
                 );
             }
@@ -35,30 +48,21 @@ export class Main extends Client{
                 this.once(event.eventName, event.exe.bind(null, this));
                 
             else this.on(event.eventName, event.exe.bind(null, this));
-            console.log(`\x1b[33m%s\x1b[0m`,`[events] ${event.eventName} loaded`)
+            this.verbose ? console.log(`\x1b[33m%s\x1b[0m`,`[events] ${event.eventName} loaded`) : null
         }))
+        console.log(`\x1b[32m%s\x1b[0m`,`[events] all events loaded`)
     }
     /**
      * Função que carrega os administradores do bot recebidos pelo arquivo `.env`
      * e adiciona no na classe disponível no client.
      */
-    private loadAdm():string[]{
-        if(process.env!.ADMS!){
-            //the format should be like this
-            //'["adm1ID","adm2ID"]'
-            return JSON.parse(process.env!.ADMS!)
-        }else{
-            throw new Error('no administrators were provided')
-        }
-        
+    private loadAdm():string[]|undefined{
+        return process.env!.ADMS! ? JSON.parse(process.env!.ADMS!) : undefined
     }
-
-    
-
 }
 
 new Main({
-
+    verbose: process.argv[2]=='-verbose',
     intents:[
         "Guilds",
         "GuildMessages",

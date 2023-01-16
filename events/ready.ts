@@ -31,7 +31,7 @@ const ready:EventI<'ready'> = {
             client.commands.set(command.data.name, command)
 
             var imports: Array<any> = [];
-            console.log(`\x1b[33m%s\x1b[0m`,`[commands] ${command.data.name} loaded`)
+            client.verbose ? console.log(`\x1b[33m%s\x1b[0m`,`[commands] ${command.data.name} loaded`) : null
             imports.push(command);
             imports.map((i) => {
                 commandArr.push(i.data.toJSON());
@@ -63,7 +63,7 @@ const ready:EventI<'ready'> = {
                         type:ActivityType.Playing
                     }]
                 })
-                console.log(`[websocket] ping: ${client.ws.ping}`)
+                client.verbose ? console.log(`[websocket] ping: ${client.ws.ping}`) : null
                 await new Promise(resolve => setTimeout(resolve, 1000*35))
             }
             // console.log("bot started")
