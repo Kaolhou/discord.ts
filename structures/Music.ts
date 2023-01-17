@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from "discord.js";
 import { Main } from "..";
-import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, VoiceConnectionStatus,AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel, NoSubscriberBehavior, VoiceConnection } from "@discordjs/voice";
 import play, { SoundCloudTrack, YouTubeVideo } from 'play-dl'; 
 import reply from "../util/reply";
 
@@ -26,6 +26,11 @@ export default class Music {
         this.client = client
         this.guild = this.client.guilds.cache.get(interaction.guildId!)
         this.connect(interaction)
+        this.connection?.on(VoiceConnectionStatus.Destroyed,(newState, status)=>{
+            let channel =  client.channels.cache.get(interaction.channelId)
+            channel?.isTextBased() ? channel.send('disconnected') : null
+            //todo
+        }) 
         //this.connection?.subscribe(this.player)
     }
     private connect(interaction:CommandInteraction){
@@ -38,6 +43,7 @@ export default class Music {
                     channelId: member.voice.channelId!,
                     adapterCreator: this.guild!.voiceAdapterCreator,
                 })
+                this.client.verbose ? console.log(`[Music] voice connection created at ${member.voice.channelId!}`) : null
             }else{
                 reply(interaction,{message:'sem permissão para entrar, ou canal de voz lotado'})
             }
@@ -96,7 +102,7 @@ export default class Music {
         }else if(type && (type =='so_track'||type=='so_playlist')){
             //todo video for soundcloud
         }else{
-            reply(interaction,{message:'invalid video'})
+            reply(interaction,{content:'invalid video'})
             return false
         }
     }
