@@ -5,6 +5,7 @@ import { config } from "dotenv";
 import Music from "./structures/Music";
 import { PrismaClient } from "@prisma/client";
 import { NoEventsProvided } from "./structures/Errors";
+import path from 'path'
 config()
 interface MainOptions extends ClientOptions{
     verbose?:boolean
@@ -37,7 +38,7 @@ export class Main extends Client{
             )
         }
         await Promise.all(events.map(async (file)=>{
-            const event = (await import(__dirname+'\\'+'events'+'\\'+file)).default as EventI<any>;
+            const event = (await import('file://'+path.resolve(__dirname,"events",file))).default as EventI<any>;
             if (!event) {
                 console.error(
                     "\x1b[30m%s\x1b[0m",

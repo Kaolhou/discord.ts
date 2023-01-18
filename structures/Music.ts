@@ -107,11 +107,6 @@ export default class Music {
         }
     }
 
-    //todo 
-    // public removeFromQueue(index:number){
-
-    // }
-
     public pause(){
         this.isPlaying = false
         this.player.pause()
