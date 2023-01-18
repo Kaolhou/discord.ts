@@ -1,4 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import embedQueue from "../util/embedQueue";
 import reply from "../util/reply";
 import { CommandI } from "../util/types";
 
@@ -12,13 +13,8 @@ const pause:CommandI = {
 
                 connection!.queue.length>=1 ?
             (async function (){
-                connection?.queue.forEach((i,index)=>{
-                    if(index==0){
-                        embed.addFields({name:`\`now playing\` ${i.title.length>=40?i.title.substring(0,40)+'...':i.title}`, value:i.link})
-                    }else{
-                        embed.addFields({name:`[${index}] - ${i.title.length>=45?i.title.substring(0,45)+'...':i.title}`, value:i.link})
-                    }
-                })
+                let embed = embedQueue(connection?.queue)
+
                 await reply(interaction,{
                     embeds:[embed]
                 })}

@@ -4,7 +4,7 @@ import { AudioPlayer, AudioPlayerStatus, VoiceConnectionStatus,AudioResource, cr
 import play, { SoundCloudTrack, YouTubeVideo } from 'play-dl'; 
 import reply from "../util/reply";
 
-interface SoundOptions{
+export interface SoundOptions{
     link:string
     title:string
     platform: false | "so_playlist" | "so_track" | "sp_track" | "sp_album" | "sp_playlist" | "dz_track" | "dz_playlist" | "dz_album" | "yt_video" | "yt_playlist" | "search"
@@ -23,11 +23,12 @@ export default class Music {
     public connection:VoiceConnection|undefined
     
     constructor(client:Main,interaction:CommandInteraction){
+        let channel =  client.channels.cache.get(interaction.channelId)
         this.client = client
         this.guild = this.client.guilds.cache.get(interaction.guildId!)
         this.connect(interaction)
+        this.channel = channel?.id!
         this.connection?.on(VoiceConnectionStatus.Destroyed,(newState, status)=>{
-            let channel =  client.channels.cache.get(interaction.channelId)
             channel?.isTextBased() ? channel.send('disconnected') : null
             //todo
         }) 
