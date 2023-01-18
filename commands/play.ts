@@ -21,8 +21,13 @@ const play:CommandI = {
         if(connection){
 
             this.music = connection
-
-            await this.music.addToQueue(interaction,musicToQueue)
+            if(this.music.queue.length == 0){
+                await this.music.addToQueue(interaction,musicToQueue)
+                this.music.playMusic()
+            }else{
+                await this.music.addToQueue(interaction,musicToQueue)
+            }
+            
 
         }else{
             
