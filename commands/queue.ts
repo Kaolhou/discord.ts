@@ -7,11 +7,9 @@ import { CommandI } from "../util/types";
 const pause:CommandI = {
     async exe(interaction, client) {
         if(interaction){
-            let connection = client.connections.get(interaction.guildId!)
-            let embed = new EmbedBuilder()
-                .setTitle('Queue')
-
-                connection!.queue.length>=1 ?
+            let connection = client.connections.get(interaction.guildId!)                
+            
+            connection!.queue.length>=1 ?
             (async function (){
                 let embed = embedQueue(connection?.queue)
 

@@ -3,6 +3,8 @@ import { SoundOptions } from "../structures/Music";
 
 export default function(queue:SoundOptions[]|undefined){
     const embed = new EmbedBuilder()
+        .setTitle('Queue')
+
     if(queue!==undefined){
         queue.forEach((i,index)=>{
             if(index==0){
