@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import embedQueue from "../util/embedQueue";
+import { embedQueue } from "../util/embeds";
 import reply from "../util/reply";
 import { CommandI } from "../util/types";
 

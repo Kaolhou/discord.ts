@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { SoundOptions } from "../structures/Music";
 
-export default function(queue:SoundOptions[]|undefined){
+export function embedQueue(queue:SoundOptions[]|undefined){
     const embed = new EmbedBuilder()
         .setTitle('Queue')
 
@@ -14,5 +14,15 @@ export default function(queue:SoundOptions[]|undefined){
             }
         })
     }
+    return embed
+}
+export function lyricsQueue(title:string,lines:string[]){
+    const embed = new EmbedBuilder()
+        .setTitle(title)
+    let content = ''
+    lines.forEach((i)=>{
+        content+=i+'\n'
+    })
+    embed.setDescription(content)
     return embed
 }
