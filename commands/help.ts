@@ -40,6 +40,10 @@ const help:CommandI = {
                     {
                         name:'remove',
                         value:'remove a item from queue'
+                    },
+                    {
+                        name:'lyrics',
+                        value:'show the lyrics from a music'
                     }
                 ])
             const etc = new EmbedBuilder()

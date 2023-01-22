@@ -12,10 +12,17 @@ const lyrics:CommandI = {
         let queueLenght = play.music?.queue.length
         if(queueLenght&&queueLenght!==0){
             const index = (interaction.options.get('index',false) || 0) as number
-            const embed = lyricsQueue(play.music?.queue[index].title!,await (await getSubtitle(play.music?.queue[index].video_details.url!)).map((i)=>i.text))
-            reply(interaction,{
-                embeds: [embed]
-            })
+            if(play.music?.queue[index]){
+                const embed = lyricsQueue(play.music?.queue[index].title,await (await getSubtitle(play.music?.queue[index].video_details.url)).map((i)=>i.text))
+                reply(interaction,{
+                    embeds: [embed]
+                })
+            }else{
+                reply(interaction,{
+                    content:'invalid index'
+                })
+            }
+            
         }else{
             reply(interaction,{
                 content:'queue empty'
