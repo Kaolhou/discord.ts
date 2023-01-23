@@ -1,10 +1,10 @@
-import { Client, ClientOptions, Collection, Interaction, Partials } from "discord.js";
+import { Client, ClientOptions, Collection, Partials } from "discord.js";
 import { events } from "./util/find";
 import { CommandI, EventI } from "./util/types";
 import { config } from "dotenv";
 import Music from "./structures/Music";
 import { PrismaClient } from "@prisma/client";
-import { NoEventsProvided } from "./structures/Errors";
+import { ImportError, NoEventsProvided } from "./structures/Errors";
 import path from 'path'
 config()
 interface MainOptions extends ClientOptions{
@@ -38,7 +38,11 @@ export class Main extends Client{
             )
         }
         await Promise.all(events.map(async (file)=>{
-            const event = (await import((__filename.endsWith('.ts')?'file:\\':'')+path.resolve(__dirname,"events",file))).default as EventI<any>;
+            try {
+                var event = (await import((__filename.endsWith('.ts')?'file:\\':'file:\\')+path.resolve(__dirname,"events",file))).default as EventI<any>;
+            } catch (error) {
+                throw new ImportError('Import Error')
+            }
             if (!event) {
                 console.error(
                     "\x1b[30m%s\x1b[0m",

@@ -5,6 +5,7 @@ import { commands } from "../util/find";
 import { config } from "dotenv";config()
 import path from 'path'
 import { Main } from "..";
+import { ImportError } from "../structures/Errors";
 
 /**
  * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
@@ -20,7 +21,11 @@ const ready:EventI<'ready'> = {
 
         await Promise.all(commands.map(async (file)=>{
             
-            const command = (await import((__filename.endsWith('.ts')?'file:\\':'')+path.resolve(__dirname,'..','commands',file))).default as CommandI;
+            try {
+                var command = (await import((__filename.endsWith('.ts')?'file:\\':'')+path.resolve(__dirname,'..','commands',file))).default as CommandI;
+            } catch (error) {
+                throw new ImportError('Import Error')
+            }
             if (!command) {
                 console.error(
                     `File at path ${file} seems to incorrectly be exporting an event.`
