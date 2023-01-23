@@ -20,7 +20,7 @@ const ready:EventI<'ready'> = {
 
         await Promise.all(commands.map(async (file)=>{
             
-            const command = (await import('file://'+path.resolve(__dirname,'..','commands',file))).default as CommandI;
+            const command = (await import((__filename.endsWith('.ts')?'file:\\':'')+path.resolve(__dirname,'..','commands',file))).default as CommandI;
             if (!command) {
                 console.error(
                     `File at path ${file} seems to incorrectly be exporting an event.`
