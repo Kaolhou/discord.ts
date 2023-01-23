@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "@discordjs/builders"
 import { SlashCommandBuilder } from "discord.js"
-import embedQueue from "../util/embeds"
+import { embedQueue } from "../util/embeds"
 import reply from "../util/reply"
 import { CommandI } from "../util/types"
 import play from './play'
