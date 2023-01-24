@@ -44,6 +44,10 @@ const help:CommandI = {
                     {
                         name:'lyrics',
                         value:'show the lyrics from a music'
+                    },
+                    {
+                        name:'loop',
+                        value:'loops the queue'
                     }
                 ])
             const etc = new EmbedBuilder()

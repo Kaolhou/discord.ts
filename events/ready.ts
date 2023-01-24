@@ -22,8 +22,13 @@ const ready:EventI<'ready'> = {
         await Promise.all(commands.map(async (file)=>{
             
             try {
-                var command = (await import((__filename.endsWith('.ts')?'file:\\':'')+path.resolve(__dirname,'..','commands',file))).default as CommandI;
+                if(__filename.endsWith('.ts')){
+                    var command = (await import("file://"+path.resolve(__dirname,'..','commands',file))).default as CommandI;
+                }else{
+                    var command = (await import(path.resolve(__dirname,'..','commands',file))).default as CommandI;
+                }            
             } catch (error) {
+                console.log(error)
                 throw new ImportError('Import Error')
             }
             if (!command) {
@@ -67,8 +72,8 @@ const ready:EventI<'ready'> = {
                         type:ActivityType.Playing
                     }]
                 })
-                client.verbose ? console.log(`[websocket] ping: ${client.ws.ping}`) : null
                 await new Promise(resolve => setTimeout(resolve, 1000*35))
+                client.verbose ? console.log(`[websocket] ping: ${client.ws.ping}`) : null
             }
             // console.log("bot started")
     },

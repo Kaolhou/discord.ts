@@ -9,18 +9,19 @@ export interface SoundOptions{
     title:string
     platform: false | "so_playlist" | "so_track" | "sp_track" | "sp_album" | "sp_playlist" | "dz_track" | "dz_playlist" | "dz_album" | "yt_video" | "yt_playlist" | "search"
     video_details: YouTubeVideo | SoundCloudTrack
-    audioResource:AudioResource
 }
+export type loopToggle = 'one'|'all'|'off'
 
 export default class Music {
 
     private client:Main
-    public channel:string=''
+    public channel:string='' //todo enviar mensagem de "current song"
     private player:AudioPlayer = createAudioPlayer()
     public queue: SoundOptions[] = []
     public isPlaying = false
     private guild
     public connection:VoiceConnection|undefined
+    public loopStatus:loopToggle = 'off'
     
     constructor(client:Main,interaction:CommandInteraction){
         let channel =  client.channels.cache.get(interaction.channelId)
@@ -81,16 +82,11 @@ export default class Music {
                 .setTitle(video_details.title==undefined?null:video_details.title)
                 .setThumbnail(video_details.thumbnails[0].url)
 
-            const video = await play.stream(/*this.queue[0].link*/link)
-
             let music = {
                 link,
                 video_details,
                 platform: type,
                 title: video_details.title,
-                audioResource: createAudioResource(video.stream,{
-                    inputType:video.type
-                })
             } as SoundOptions
 
             this.queue.push(music)
@@ -127,15 +123,27 @@ export default class Music {
         if(this.queue[0] && await play.validate(this.queue[0].link)){
             
             if(play.yt_validate(this.queue[0].link)){
+                const video = await play.stream(this.queue[0].link)
 
                 this.isPlaying = true
 
-                this.player.play(this.queue[0].audioResource)
+                this.player.play(createAudioResource(video.stream,{
+                    inputType:video.type
+                }))
             }
 
             this.connection?.subscribe(this.player)
             this.player.on(AudioPlayerStatus.Idle,()=>{
-                this.queue.shift()
+                switch(this.loopStatus){
+                    case 'off':
+                        this.queue.shift()
+                        break;
+                    case 'all':
+                        this.queue.push(this.queue.shift()!)    
+                        break;
+                    case 'one': 
+                        break;
+                }
                 this.playMusic()
             })
         }

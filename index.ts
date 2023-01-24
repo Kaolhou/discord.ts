@@ -39,7 +39,11 @@ export class Main extends Client{
         }
         await Promise.all(events.map(async (file)=>{
             try {
-                var event = (await import((__filename.endsWith('.ts')?'file:\\':'file:\\')+path.resolve(__dirname,"events",file))).default as EventI<any>;
+                if(__filename.endsWith('.ts')){
+                    var event = (await import("file://"+path.resolve(__dirname,'events',file))).default as EventI<any>;
+                }else{
+                    var event = (await import(path.resolve(__dirname,'events',file))).default as EventI<any>;
+                }
             } catch (error) {
                 throw new ImportError('Import Error')
             }
