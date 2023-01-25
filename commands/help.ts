@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import reply from "../util/reply";
 import { CommandI } from "../util/types";
+import author from "./author";
 
 const help:CommandI = {
     async exe(interaction, client) {
@@ -48,6 +49,14 @@ const help:CommandI = {
                     {
                         name:'loop',
                         value:'loops the queue'
+                    },
+                    {
+                        name:'shuffle',
+                        value:'shuffle the queue'
+                    },
+                    {
+                        name:'download',
+                        value:'download a yt video'
                     }
                 ])
             const etc = new EmbedBuilder()
@@ -61,6 +70,10 @@ const help:CommandI = {
                     {
                         name:'meme',
                         value:'show a meme'
+                    },
+                    {
+                        name:'author',
+                        value:'show about the creator of bot'
                     }
                 ])
             
