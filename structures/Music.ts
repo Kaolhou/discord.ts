@@ -47,10 +47,10 @@ export default class Music {
                 })
                 this.client.verbose ? console.log(`[Music] voice connection created at ${member.voice.channelId!}`) : null
             }else{
-                reply(interaction,{message:'sem permissão para entrar, ou canal de voz lotado'})
+                reply(interaction,{content:'sem permissão para entrar, ou canal de voz lotado'})
             }
         }else{
-            reply(interaction,{message:'usuário não conectado em canal de voz'})
+            reply(interaction,{content:'usuário não conectado em canal de voz'})
         }
     }
 

@@ -6,6 +6,7 @@ import { config } from "dotenv";config()
 import path from 'path'
 import { Main } from "..";
 import { ImportError } from "../structures/Errors";
+import fs from 'fs'
 
 /**
  * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
@@ -16,7 +17,7 @@ const ready:EventI<'ready'> = {
     eventName:'ready',
     async exe(client:Main) {
         const commandArr: Array<CommandI> = [];
-
+        const ignore = fs.readFileSync(process.cwd()+'\\.commandignore','utf-8').split('\n')
         const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
 
         await Promise.all(commands.map(async (file)=>{
@@ -37,14 +38,18 @@ const ready:EventI<'ready'> = {
                 );
             }
 
-            client.commands.set(command.data.name, command)
+            if(!(ignore.find(i=>i===command.data.toJSON().name))){
+                client.commands.set(command.data.name, command)
 
-            var imports: Array<any> = [];
-            client.verbose ? console.log(`\x1b[33m%s\x1b[0m`,`[commands] ${command.data.name} loaded`) : null
-            imports.push(command);
-            imports.map((i) => {
-                commandArr.push(i.data.toJSON());
-            });
+                var imports: Array<any> = [];
+                client.verbose ? console.log(`\x1b[33m%s\x1b[0m`,`[commands] ${command.data.name} loaded`) : null
+                imports.push(command);
+                imports.map((i) => {
+                    commandArr.push(i.data.toJSON());
+                });
+            }else{
+                client.verbose ? console.log(`\x1b[31m%s\x1b[0m`,`[commands] ${command.data.name} ignored`) : null
+            }
         }))
         /**
          * substitua applicationCommands por applicationGuildCommands e retire o
