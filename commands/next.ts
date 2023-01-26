@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from "discord.js"
-import reply from "../util/reply"
 import { CommandI } from "../util/types"
 import music from './play'
 
@@ -10,13 +9,9 @@ const next:CommandI = {
         let connection = client.connections.get(interaction.guildId!)
         if(connection && member?.voice.channel?.id == connection.channel){
             music.music?.next()
-            reply(interaction,{
-                content:':track_next:next song'
-            })
+            interaction.editReply(':track_next:next song')
         }else{
-            reply(interaction,{
-                content:'you must be connected in the same voice channel then me'
-            })
+            interaction.editReply('you must be connected in the same voice channel then me')
         }
     },
     data: new SlashCommandBuilder()

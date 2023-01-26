@@ -1,7 +1,5 @@
-import { EmbedBuilder } from "@discordjs/builders"
 import { SlashCommandBuilder } from "discord.js"
 import { embedQueue } from "../util/embeds"
-import reply from "../util/reply"
 import { CommandI } from "../util/types"
 import play from './play'
 
@@ -15,14 +13,12 @@ const shuffle:CommandI = {
 
             let embed = embedQueue(play.music?.queue)
             
-            reply(interaction,{
+            interaction.editReply({
                 content:'queue shuffled, here is the new queue',
                 embeds:[embed]
             })
         }else{
-            reply(interaction,{
-                content:'queue empty'
-            })
+            interaction.editReply('queue empty')
         }
 
     },

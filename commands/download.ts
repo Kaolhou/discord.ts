@@ -3,7 +3,6 @@ import ytdl from "ytdl-core"
 import { CommandI } from "../util/types"
 import fs from 'fs'
 import {resolve} from 'path'
-import reply from "../util/reply"
 
 type quality = 'high'|'low'
 
@@ -29,16 +28,16 @@ const download:CommandI = {
             var fileSizeInMegabytes = stats.size / (1024*1024);
 
             if(fileSizeInMegabytes<=5){
-                reply(interaction,{
+                interaction.editReply({
                     files:[{
                         attachment: process.cwd()+'/media/downloads/'+fileName,
                         name:fileName
                     }]
                 })
             }else{
-                reply(interaction,{
-                    content:`file can't pass 5MB\nyour file: ${fileSizeInMegabytes.toFixed(2)}MB`
-                })
+                interaction.editReply(
+                    `file can't pass 5MB\nyour file: ${fileSizeInMegabytes.toFixed(2)}MB`
+                )
             }
         }
 

@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "discord.js"
 import { loopToggle } from "../structures/Music"
-import reply from "../util/reply"
 import { CommandI } from "../util/types"
 import play from './play'
 
@@ -14,9 +13,7 @@ const loop:CommandI = {
             if(isLoopToogle(value)){
                 play.music.loopStatus = value
             }
-            reply(interaction,{
-                content:`looped as \`${value}\``
-            })
+            interaction.editReply(`looped as \`${value}\``)
         }
     },
     data: new SlashCommandBuilder()

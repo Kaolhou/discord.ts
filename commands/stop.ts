@@ -11,13 +11,9 @@ const stop:CommandI = {
         if(connection && member?.voice.channel?.id == connection.channel){
             music.music?.connection?.destroy()
             client.connections.delete(interaction.guildId!)
-            reply(interaction,{
-                content:'song stoped'
-            })
+            interaction.editReply('song stoped')
         }else{
-            reply(interaction,{
-                content:'you must be connected in the same voice channel then me'
-            })
+            interaction.editReply('you must be connected in the same voice channel then me')
         }
     },
     data: new SlashCommandBuilder()

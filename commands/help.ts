@@ -1,7 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import reply from "../util/reply";
 import { CommandI } from "../util/types";
-import author from "./author";
 
 const help:CommandI = {
     async exe(interaction, client) {
@@ -77,7 +75,7 @@ const help:CommandI = {
                     }
                 ])
             
-            await reply(interaction,{
+            await interaction.editReply({
                 embeds:[info,musics,etc]
             })
         }

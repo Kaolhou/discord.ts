@@ -1,6 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { embedQueue } from "../util/embeds";
-import reply from "../util/reply";
 import { CommandI } from "../util/types";
 
 //todo adicionar páginas
@@ -13,13 +12,11 @@ const pause:CommandI = {
             (async function (){
                 let embed = embedQueue(connection?.queue)
 
-                await reply(interaction,{
+                interaction.editReply({
                     embeds:[embed]
                 })}
             )() : 
-            await reply(interaction,{
-                content:'queue is empty'
-            })
+            await interaction.editReply('queue is empty')
         }
     },
     data: new SlashCommandBuilder()

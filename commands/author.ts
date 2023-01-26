@@ -1,6 +1,5 @@
 import { EmbedBuilder } from "@discordjs/builders"
 import { SlashCommandBuilder } from "discord.js"
-import reply from "../util/reply"
 import { CommandI } from "../util/types"
 
 const author:CommandI = {
@@ -21,8 +20,7 @@ const author:CommandI = {
                     inline:true
                 }
             )
-        reply(interaction,{
-            ephemeral:true,
+        interaction.editReply({
             embeds:[embed]
         })
     },

@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from "discord.js"
-import reply from "../util/reply"
 import { CommandI } from "../util/types"
 import play from './play'
 import getSubtitle from '../util/getSubtitle'
@@ -13,20 +12,16 @@ const lyrics:CommandI = {
         if(queueLenght&&queueLenght!==0){
             const index = (interaction.options.get('index',false) || 0) as number
             if(play.music?.queue[index]){
-                const embed = lyricsQueue(play.music?.queue[index].title,await (await getSubtitle(play.music?.queue[index].video_details.url)).map((i)=>i.text))
-                reply(interaction,{
+                const embed = lyricsQueue(play.music?.queue[index].title,(await getSubtitle(play.music?.queue[index].video_details.url)).map((i)=>i.text))
+                interaction.editReply({
                     embeds: [embed]
                 })
             }else{
-                reply(interaction,{
-                    content:'invalid index'
-                })
+                interaction.editReply('invalid index')
             }
             
         }else{
-            reply(interaction,{
-                content:'queue empty'
-            })
+            interaction.editReply('queue empty')
         }
     },
     data: new SlashCommandBuilder()

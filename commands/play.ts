@@ -1,6 +1,4 @@
-import { getVoiceConnection } from "@discordjs/voice";
 import { SlashCommandBuilder } from "discord.js";
-import { Main } from "..";
 import Music from "../structures/Music";
 import { CommandI } from "../util/types";
 
