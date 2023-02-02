@@ -1,7 +1,5 @@
 import { EmbedBuilder } from "@discordjs/builders";
-import { User } from "discord.js";
 import { SoundOptions } from "../structures/Music";
-import path from 'path'
 import { UserI } from "../structures/Uno";
 import titleParse from "./titleParse";
 
