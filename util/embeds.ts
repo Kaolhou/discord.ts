@@ -3,6 +3,7 @@ import { User } from "discord.js";
 import { SoundOptions } from "../structures/Music";
 import path from 'path'
 import { UserI } from "../structures/Uno";
+import titleParse from "./titleParse";
 
 export function embedQueue(queue:SoundOptions[]|undefined){
     const embed = new EmbedBuilder()
@@ -11,9 +12,9 @@ export function embedQueue(queue:SoundOptions[]|undefined){
     if(queue!==undefined){
         queue.forEach((i,index)=>{
             if(index==0){
-                embed.addFields({name:`\`now playing\` ${i.title.length>=40?i.title.substring(0,40)+'...':i.title}`, value:i.link})
+                embed.addFields({name:`\`now playing\` ${titleParse(i.title)}`, value:i.link})
             }else{
-                embed.addFields({name:`[${index}] - ${i.title.length>=45?i.title.substring(0,45)+'...':i.title}`, value:i.link})
+                embed.addFields({name:`[${index}] - ${titleParse(i.title)}`, value:i.link})
             }
         })
     }

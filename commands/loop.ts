@@ -1,19 +1,25 @@
 import { SlashCommandBuilder } from "discord.js"
 import { loopToggle } from "../structures/Music"
 import { CommandI } from "../util/types"
-import play from './play'
 
 const loop:CommandI = {
     async exe(interaction,client){
+        let connection = client.connections.get(interaction.guildId!)                
+
         function isLoopToogle(str:string):str is loopToggle{
             return str === 'all' || str === 'one' || str === "off"
         }
-        if(play.music?.loopStatus) {
-            let value = interaction.options.get('value')?.value! as string
-            if(isLoopToogle(value)){
-                play.music.loopStatus = value
+        if(connection){
+
+            if(connection.loopStatus) {
+                let value = interaction.options.get('value')?.value! as string
+                if(isLoopToogle(value)){
+                    connection.loopStatus = value
+                }
+                interaction.editReply(`looped as \`${value}\``)
             }
-            interaction.editReply(`looped as \`${value}\``)
+        }else{
+            interaction.editReply('no voice connection')
         }
     },
     data: new SlashCommandBuilder()

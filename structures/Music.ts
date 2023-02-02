@@ -29,10 +29,8 @@ export default class Music {
         this.guild = this.client.guilds.cache.get(interaction.guildId!)
         this.connect(interaction)
         this.channel = channel?.id!
-        this.connection?.on(VoiceConnectionStatus.Destroyed,(newState, status)=>{
-            channel?.isTextBased() ? channel.send('disconnected') : null
-            //todo
-        }) 
+        this.loadEvents()
+        
         //this.connection?.subscribe(this.player)
     }
     private connect(interaction:CommandInteraction){
@@ -52,6 +50,14 @@ export default class Music {
         }else{
             interaction.editReply('usuário não conectado em canal de voz')
         }
+    }
+
+    private loadEvents(){
+        this.connection?.on(VoiceConnectionStatus.Destroyed,(newState, status)=>{
+            
+            // channel?.isTextBased() ? channel.send('disconnected due inactivity') : null
+            //todo
+        }) 
     }
 
     public isUserConnected(interaction:CommandInteraction){
@@ -117,6 +123,7 @@ export default class Music {
         this.player.stop()
         this.queue.shift()
         this.playMusic()
+        return this.queue[0]
     }
 
     public async playMusic(){

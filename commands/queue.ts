@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { embedQueue } from "../util/embeds";
 import { CommandI } from "../util/types";
 
@@ -8,15 +8,19 @@ const pause:CommandI = {
         if(interaction){
             let connection = client.connections.get(interaction.guildId!)                
             
-            connection!.queue.length>=1 ?
-            (async function (){
-                let embed = embedQueue(connection?.queue)
-
-                interaction.editReply({
-                    embeds:[embed]
-                })}
-            )() : 
-            await interaction.editReply('queue is empty')
+            if(connection){
+                if(connection.queue.length>=1) {
+                    let embed = embedQueue(connection?.queue)
+    
+                    interaction.editReply({
+                        embeds:[embed]
+                    })
+                }else{
+                    await interaction.editReply('queue is empty')
+                }
+            }else{
+                interaction.editReply('no voice connection')
+            }
         }
     },
     data: new SlashCommandBuilder()

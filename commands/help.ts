@@ -72,6 +72,10 @@ const help:CommandI = {
                     {
                         name:'author',
                         value:'show about the creator of bot'
+                    },
+                    {
+                        name:'kiss',
+                        value:'kiss someone'
                     }
                 ])
             

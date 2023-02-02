@@ -1,27 +1,32 @@
 import { SlashCommandBuilder } from "discord.js"
 import { CommandI } from "../util/types"
-import play from './play'
 import getSubtitle from '../util/getSubtitle'
 import { lyricsQueue } from "../util/embeds"
 
 
 const lyrics:CommandI = {
     async exe(interaction,client){
-        console.log(play.music?.queue.length)
-        let queueLenght = play.music?.queue.length
-        if(queueLenght&&queueLenght!==0){
-            const index = (interaction.options.get('index',false) || 0) as number
-            if(play.music?.queue[index]){
-                const embed = lyricsQueue(play.music?.queue[index].title,(await getSubtitle(play.music?.queue[index].video_details.url)).map((i)=>i.text))
-                interaction.editReply({
-                    embeds: [embed]
-                })
+        let connection = client.connections.get(interaction.guildId!)                
+        if(connection){
+
+            let queueLenght = connection.queue.length
+            if(queueLenght&&queueLenght!==0){
+                const index = (interaction.options.get('index',false) || 0) as number
+                if(connection.queue[index]){
+                    const embed = lyricsQueue(connection.queue[index].title,(await getSubtitle(connection.queue[index].video_details.url)).map((i)=>i.text))
+                    interaction.editReply({
+                        embeds: [embed]
+                    })
+                }else{
+                    interaction.editReply('invalid index')
+                }
+                
             }else{
-                interaction.editReply('invalid index')
+                interaction.editReply('queue empty')
             }
-            
+
         }else{
-            interaction.editReply('queue empty')
+            interaction.editReply('no voice connection')
         }
     },
     data: new SlashCommandBuilder()
