@@ -1,5 +1,8 @@
 import { EmbedBuilder } from "@discordjs/builders";
+import { User } from "discord.js";
 import { SoundOptions } from "../structures/Music";
+import path from 'path'
+import { UserI } from "../structures/Uno";
 
 export function embedQueue(queue:SoundOptions[]|undefined){
     const embed = new EmbedBuilder()
@@ -24,5 +27,28 @@ export function lyricsQueue(title:string,lines:string[]){
         content+=i+'\n'
     })
     embed.setDescription(content)
+    return embed
+}
+
+interface UnoOptions{
+    player:UserI
+}
+export function unoEmbedPrivate({player}:UnoOptions){
+    const embed = new EmbedBuilder()
+        .setTitle(player.username)
+        .setFooter({text:'seu baralho'})
+            
+    return embed
+}
+export function unoEmbedPlayers(user:UserI[]){
+    const embed = new EmbedBuilder()
+        .setTitle('Uno')
+    user.forEach(i=>{
+        embed.addFields({
+            name:i.username,
+            value:`${i.deck.length.toString()} cartas`
+        })
+    })
+
     return embed
 }

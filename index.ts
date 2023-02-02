@@ -76,7 +76,9 @@ new Main({
         "Guilds",
         "GuildMessages",
         "GuildMessageReactions",
-        "GuildVoiceStates"
+        "GuildVoiceStates",
+        "DirectMessages",
+        'DirectMessageReactions'
     ],
-    partials:[Partials.Message, Partials.Channel, Partials.Reaction]
+    partials:[Partials.Message, Partials.Channel, Partials.Reaction,Partials.Channel]
 })
