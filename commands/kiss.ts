@@ -9,7 +9,10 @@ const kiss:CommandI = {
         
         interaction.editReply({
             content:`woopps!! ${interaction.user.username} just kissed <@${target.id}>`,
-            files:[randomize(kisses)]
+            files:[{
+                name:'kiss.gif',
+                attachment:randomize(kisses)
+            }]
         })
 
     },
