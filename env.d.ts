@@ -6,6 +6,7 @@ declare global{
             CLIENT_ID?:string
             ADMS?:string
             MEME_ENDPOINT:string
+            NODE_ENV:'production'|undefined
         }
     }
 }

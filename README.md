@@ -3,6 +3,8 @@
 ## Introdução
 Isso é um projeto de desenvolvimento de um [Discord Bot](https://discord.js.org) usando [TypeScript](https://www.typescriptlang.org), ele possui objetivos recreativos e educacionais considerando que é aplicado diversas tecnologias
 
+Com frequência, o bot é iniciado em meu computador, você pode convidar o Bot em seu servidor do Discord por [aqui](https://discord.com/oauth2/authorize?client_id=862763521769734154&scope=bot&permissions=2150672456)
+
 Se estiver interessado no projeto pode iniciar em sua máquina seguindo as seguintes instruções:
 
 1. Inicie com o *`git clone`* para iniciar um repositório local, então dê *`npm install`* para instalar as dependências
