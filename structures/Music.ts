@@ -47,10 +47,10 @@ export default class Music {
                 })
                 this.client.verbose ? console.log(`[Music] voice connection created at ${member.voice.channelId!}`) : null
             }else{
-                reply(interaction,{content:'sem permissão para entrar, ou canal de voz lotado'})
+                interaction.editReply('sem permissão para entrar, ou canal de voz lotado')
             }
         }else{
-            reply(interaction,{content:'usuário não conectado em canal de voz'})
+            interaction.editReply('usuário não conectado em canal de voz')
         }
     }
 
@@ -91,7 +91,7 @@ export default class Music {
 
             this.queue.push(music)
 
-            reply(interaction,{
+            interaction.editReply({
                 content:'video added to queue',
                 embeds:[embed]
             })
@@ -99,7 +99,7 @@ export default class Music {
         }else if(type && (type =='so_track'||type=='so_playlist')){
             //todo video for soundcloud
         }else{
-            reply(interaction,{content:'invalid video'})
+            interaction.editReply('invalid video')
             return false
         }
     }
