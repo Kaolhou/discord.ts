@@ -24,11 +24,13 @@ export default class Music {
     public loopStatus:loopToggle = 'off'
     
     constructor(client:Main,interaction:CommandInteraction){
-        let channel =  client.channels.cache.get(interaction.channelId)
         this.client = client
         this.guild = this.client.guilds.cache.get(interaction.guildId!)
-        this.connect(interaction)
+        let channel =  client.channels.cache.get(interaction.channelId)
+        
         this.channel = channel?.id!
+        
+        this.connect(interaction)
         this.loadEvents()
         
         //this.connection?.subscribe(this.player)
@@ -43,6 +45,7 @@ export default class Music {
                     channelId: member.voice.channelId!,
                     adapterCreator: this.guild!.voiceAdapterCreator,
                 })
+                this.client.connections.set(interaction.guildId!,this) // a responsabilidade da conexão passa a ser da classe Music
                 this.client.verbose ? console.log(`[Music] voice connection created at ${member.voice.channelId!}`) : null
             }else{
                 interaction.editReply('sem permissão para entrar, ou canal de voz lotado')

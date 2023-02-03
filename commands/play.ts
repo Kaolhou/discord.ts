@@ -31,8 +31,6 @@ const play:CommandI = {
             
             this.music = new Music(client,interaction)
             
-            client.connections.set(interaction.guildId!,this.music)
-            
             await this.music.addToQueue(interaction,musicToQueue)
             
             this.music.playMusic()
