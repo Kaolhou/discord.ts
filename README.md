@@ -28,3 +28,7 @@ Se estiver interessado no projeto pode iniciar em sua máquina seguindo as segui
 Caso queira contribuir no projeto crie seu **Fork** e quando chegar em um resultado final me envie uma **Pull Request**, ou entre em contato com o meu **Discord Pessoal** `Kaolhou#3901`. 
 
 Se você usa o editor de texto [Visual Studio Code](https://code.visualstudio.com/), existe um  snippet predefinido para criação de commandos para a pasta `commands`, basta apenas digitar **_command_**.
+
+## **Avisos**
+
+> - Foi escolhido o pacote node-fetch na versão 2.6.6 pois a partir da 3.x não é mais aceito `require()` [verifique melhor aqui](https://stackoverflow.com/questions/69081410/error-err-require-esm-require-of-es-module-not-supported)

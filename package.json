@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "windows:start": "set NODE_ENV=production && node build/index.js",
-    "linux:start":"NODE_ENV=production node build/index.js",
+    "linux:start": "NODE_ENV=production node build/index.js",
     "prod:install": "npm install --omit=dev",
+    "start": "set NODE_ENV=production && node build/index.js -verbose",
     "dev": "tsx watch index.ts -verbose",
     "build": "tsc",
     "url:test": "node index.js"
@@ -25,10 +26,12 @@
     "@prisma/client": "^4.8.1",
     "axios": "^1.2.3",
     "canvas": "^2.11.0",
+    "chatgpt": "^4.1.1",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "ffmpeg-static": "^5.1.0",
     "libsodium-wrappers": "^0.7.10",
+    "node-fetch": "^2.6.6",
     "play-dl": "^1.9.6",
     "typescript": "^4.9.4",
     "youtube-transcript": "^1.0.4",
@@ -36,6 +39,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.6.2",
     "nodemon": "^2.0.20",
     "prisma": "^4.8.1",
     "ts-node": "^10.9.1",
