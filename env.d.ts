@@ -7,6 +7,7 @@ declare global{
             ADMS?:string
             MEME_ENDPOINT:string
             NODE_ENV:'production'|undefined
+            OPEN_AI_KEY:string
         }
     }
 }

@@ -6,9 +6,13 @@ import Music from "./structures/Music";
 import { PrismaClient } from "@prisma/client";
 import { ImportError, NoEventsProvided } from "./structures/Errors";
 import path from 'path'
+import fetch, { Headers, Request, Response } from 'node-fetch';
 config()
 interface MainOptions extends ClientOptions{
     verbose?:boolean
+}
+if (!('fetch' in globalThis)) {
+  Object.assign(globalThis, { fetch, Headers, Request, Response })
 }
 export class Main extends Client{
     commands = new Collection<string, CommandI>() //commands array
