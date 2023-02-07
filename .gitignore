@@ -3,4 +3,5 @@ node_modules
 .env
 colors.md
 downloads
-.commandignore
+util/print.ts
+test.json
