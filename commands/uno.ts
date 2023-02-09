@@ -22,17 +22,21 @@ const uno:CommandI = {
         .filter(i=>i!==null)
         .filter(i=>!i.bot)
 
-        if(players.length < 2){
+        if(removeDuplicates(players).length < 2){
             return interaction.editReply('min 2 players')
         }
 
-        removeDuplicates(players)
-        new Uno({
-            players,
+        let uno:Uno|null = new Uno({
+            players:removeDuplicates(players),
             interaction,
             client
         })
-        // console.log(players)
+        // let winner = uno.players.find(i=>i.deck.length===0)
+        // while(!(uno.players.find(i=>i.deck.length===0))){
+
+        // }
+        
+        
         
     },
     data: new SlashCommandBuilder()

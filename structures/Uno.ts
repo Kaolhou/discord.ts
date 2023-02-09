@@ -1,14 +1,25 @@
-import { CommandInteraction, Message, User } from "discord.js";
-import { unoEmbedPlayers, unoEmbedPrivate } from "../util/embeds";
+import { Collection, CommandInteraction, Message, User } from "discord.js";
+import {  unoEmbedPlayers, unoEmbedPrivate } from "../util/embeds";
 import canvasDeck from "../util/canvasDeck";
 import { Main } from "..";
+import removeDuplicates from "../util/removeDuplicates";
 
 interface UnoParams{
     players:User[]
     interaction:CommandInteraction
     client:Main
 }
-type cards ='0r'|'1r'|'2r'|'3r'|'4r'|'5r'|'6r'|'7r'|'8r'|'9r'|'plus2r'|'blockr'|'rever'|
+export interface infoCard{
+    card:cards
+    reverse:boolean
+    block:boolean
+    changeColor:boolean
+    number:boolean
+    buy: 2|4|false
+    color:'green'|'red'|'yellow'|'blue'|'black'|false
+    type:'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'0'|'reverse'|'block'|'plus2'|'color'|'color4'|false
+}
+export type cards ='0r'|'1r'|'2r'|'3r'|'4r'|'5r'|'6r'|'7r'|'8r'|'9r'|'plus2r'|'blockr'|'rever'|
             '0b'|'1b'|'2b'|'3b'|'4b'|'5b'|'6b'|'7b'|'8b'|'9b'|'plus2b'|'blockb'|'reveb'|
             '0y'|'1y'|'2y'|'3y'|'4y'|'5y'|'6y'|'7y'|'8y'|'9y'|'plus2y'|'blocky'|'revey'|
             '0g'|'1g'|'2g'|'3g'|'4g'|'5g'|'6g'|'7g'|'8g'|'9g'|'plus2g'|'blockg'|'reveg'|
@@ -18,98 +29,53 @@ export interface UserI extends User{
     deck:cards[]
     message:Message<false>|undefined
     reacted:boolean
+    alreadyBought: boolean
 }
 
 export default class Uno{
 
-    public step = 1
+    public turn = 0
     public block = false
     public amountBuy = 0
     public monte:cards[] = []
-    // public cards = {
-        //     '00':'https://imgur.com/osBTa5O',
-        //     '0b':'https://imgur.com/APG1icX',
-        //     '0g':'https://imgur.com/dPKoWIY',
-        //     '0r':'https://imgur.com/JJBSwjv',
-        //     '0y':'https://imgur.com/NDvNcNm',
-    //     '1b':'https://imgur.com/5epOU3Z',
-    //     '1g':'https://imgur.com/n086BvF',
-    //     '1r':'https://imgur.com/qHIEYE3',
-    //     '1y':'https://imgur.com/3zSbudh',
-    //     '2b':'https://imgur.com/JceA9JT',
-    //     '2g':'https://imgur.com/R3QpQCX',
-    //     '2r':'https://imgur.com/rjxbpoi',
-    //     '2y':'https://imgur.com/8TsDmhX',
-    //     '3b':'https://imgur.com/dRdiAAN',
-    //     '3g':'https://imgur.com/Fuy4J86',
-    //     '3r':'https://imgur.com/A2gSDYD',
-    //     '3y':'https://imgur.com/DfydYb6',
-    //     '4b':'https://imgur.com/UwkD5jX',
-    //     '4g':'https://imgur.com/nWKdryJ',
-    //     '4r':'https://imgur.com/Xgbunn6',
-    //     '4y':'https://imgur.com/jdXfxbH',
-    //     '5b':'https://imgur.com/EZ40y3j',
-    //     '5g':'https://imgur.com/ZAZjN8w',
-    //     '5r':'https://imgur.com/8ivSuu9',
-    //     '5y':'https://imgur.com/kl63O2s',
-    //     '6b':'https://imgur.com/vHgQcef',
-    //     '6g':'https://imgur.com/KyOBOoY',
-    //     '6r':'https://imgur.com/KJSRIms',
-    //     '6y':'https://imgur.com/JClhGMt',
-    //     '7b':'https://imgur.com/twPdX6U',
-    //     '7g':'https://imgur.com/KUwGJY1',
-    //     '7r':'https://imgur.com/4B1nhJk',
-    //     '7y':'https://imgur.com/s9YXS4R',
-    //     '8b':'https://imgur.com/jdjAT9a',
-    //     '8g':'https://imgur.com/F899ywy',
-    //     '8r':'https://imgur.com/guYIwpg',
-    //     '8y':'https://imgur.com/zDD364G',
-    //     '9b':'https://imgur.com/lXgY5w3',
-    //     '9g':'https://imgur.com/iilkq15',
-    //     '9r':'https://imgur.com/p5ugQMo',
-    //     '9y':'https://imgur.com/UVkzbRs',
-    //     'blockb':'https://imgur.com/EOOEVgx',
-    //     'blockg':'https://imgur.com/LjDEqbI',
-    //     'blockr':'https://imgur.com/sdTAHXy',
-    //     'blocky':'https://imgur.com/JaAct4a',
-    //     'color':'https://imgur.com/DwALbuc',
-    //     'color4':'https://imgur.com/2aYrscO',
-    //     'plus2b':'https://imgur.com/os1Vql4',
-    //     'plus2g':'https://imgur.com/dupionl',
-    //     'plus2r':'https://imgur.com/TkprdbY',
-    //     'plus2y':'https://imgur.com/GSmiGsE'
-    // }
+    public rodada:number = 1
+    private message:Message|undefined
 
     
     players:UserI[]
     interaction:CommandInteraction
     client:Main
-    // currentCard:cards
-    getFirst(){
+    currentCard:infoCard
+    
+    constructor({players,interaction,client}:UnoParams){
+        client.verbose ? console.log('[Uno] New uno game started') : null
+        this.players = players.map(i=>Object.assign(i,{deck:[],message:undefined,reacted:false,alreadyBought:false}))
+        this.interaction = interaction
+        this.client = client
+        this.setMonte()
+        this.currentCard = this.getFirst()
 
+        this.awaitToPlay()
     }
-    removeRandom(array:any[]) {
-        if(!array.length){
-            this.setMonte()
+    getFirst(){
+        var chosen:infoCard = {} as infoCard
+        while(true){
+            if(!this.monte.length) break;
+            let card = this.monte.sort( () => Math.random() - .5 )[0]
+            let infoCard = this.getInfoCards(card)
+            if(infoCard.number){
+                this.monte.shift()
+                chosen = infoCard
+                break
+            }
         }
+        return chosen
+    }
+    removeRandom<T>(array:T[]):T {
         const random = Math.floor(Math.random() * array.length);
         const el = array.splice(random, 1)[0];
         return el
     };
-
-    constructor({players,interaction,client}:UnoParams){
-        this.players = players.map(i=>Object.assign(i,{deck:[],message:undefined,reacted:false}))
-        this.interaction = interaction
-        this.client = client
-        // this.currentCard = 
-        this.awaitToPlay()//.then(()=>{
-        //     if(this.players.map(i=>i.reacted).every(i=>i===true)){
-        //         this.setMonte()
-        //         this.distribui()
-        //         this.render()
-        //     }
-        // })
-    }
 
     async awaitToPlay(){
         let str = ''
@@ -119,9 +85,6 @@ export default class Uno{
             }else{
                 str+=(`<@${i.id}>, `)
             }
-            // if(index==0){//for test
-            //     str+=`<@${i.id}> `
-            // }
         })
         str+='please react to this message'
         let message = await this.interaction.editReply(str)
@@ -134,8 +97,9 @@ export default class Uno{
                 if(findUser&&reaction.emoji.name==="✅"){
                     findUser.reacted = true
                     if(this.players.map(i=>i.reacted).every(i=>i===true)){
-                        this.start()
+                        await message.reactions.removeAll()
                         await message.delete()
+                        this.start()
                     }
                     return true
                 }
@@ -143,10 +107,69 @@ export default class Uno{
             },
             time:1000*60*2,//2min
             errors:['time']
-        }).catch((/*collected*/)=>{
+        })
+        .then((a)=>{
+            // message.edit(`foi`)
+            // console.log(a)
+        })
+        .catch(()=>{
             message.reactions.removeAll()
             message.edit(`faltou gente reagir`)
         })
+    }
+
+    getInfoCards(card:cards):infoCard{
+        if(card=="color4"){
+            return {
+                card,
+                number:false,
+                reverse:false,
+                block:false,
+                buy:4,
+                changeColor:true,
+                color:'black',
+                type: 'color4',
+            }
+        }else{
+            function getColor(card:string):infoCard['color']{
+                let char = card.charAt(card.length-1)
+                let color = (char === 'b') ? 'blue' : (char === 'g') ? 'green' : (char === 'y') ? 'yellow' :(char === 'r') ? 'red' : false;
+                return check(color)?color:false
+            }
+            function check(char:string|boolean):char is infoCard['color']{
+                return char==='green'||char==='red'||char==='yellow'||char==='blue'||char==='black'
+            }
+
+            function getCardType(card:Exclude<cards,'color4'>):infoCard['type']{
+                if(card ==='color'){
+                    return 'color'
+                }else{ 
+                    // console.log(card)
+                    let typeCard = card.slice(0,card.length-1)
+                    typeCard==='reve'?typeCard='reverse':typeCard
+                    
+                    return checkType(typeCard)?typeCard:false
+                }
+            }
+            function checkType(char:string|boolean):char is infoCard['type']{
+                return char === '1'|| char === '2'|| char === '3'|| char === '4'|| char === '5'|| char === '6'|| char === '7'|| char === '8'|| char === '9'|| char === '0'|| char === 'reverse'|| char === 'block'|| char === 'plus2'|| char === 'color'|| char === 'color4'
+            }
+            let carta = getCardType(card)
+
+            function isNumberCard(card:infoCard['type']){
+                return !Number.isNaN(Number(card))
+            }
+            return {
+                card,
+                reverse: card.startsWith('reve'),
+                block: card.startsWith('block'),
+                buy: card.charAt(4)==='2'?2:false,
+                changeColor: card === 'color',
+                color:card==='color' ? 'black' : getColor(card),
+                type: carta,
+                number: isNumberCard(carta)
+            }
+        }
     }
 
     setMonte(){
@@ -169,39 +192,58 @@ export default class Uno{
 
         )
     }
+    private reverse(){
+        this.turn = this.players.length - this.turn
+        this.players.reverse()
+    }
     
     private distribui(){
-        for(let a=0;a<9;a++){
-            this.players.forEach(i=>i.deck.push(this.removeRandom(this.monte)))
-        }
+        this.players.forEach(i=>this.compra(i,9))
     }
 
     async render(){
         //edit the public channel
-        await this.interaction.editReply({
-            embeds:[unoEmbedPlayers(this.players)],
-        })
+
+        if(this.message){
+            await this.message.edit({
+                embeds:[unoEmbedPlayers(this.players,this.currentCard.card)],
+            })
+        }else{
+            let channel = this.client.channels.cache.get(this.interaction.channel?.id!)
+            this.message = channel?.isTextBased() ? await channel.send({
+                embeds:[unoEmbedPlayers(this.players,this.currentCard.card)],
+            }) : undefined;
+        }
+
 
         //private message
-        this.players.forEach(async(player,index)=>{
-            if(index ===0){//just for test
-                if(player.message===undefined){
-                    player.message = await this.client.users.cache.get(this.players[0].id)?.send({
-                        embeds:[unoEmbedPrivate({player:this.players[0]})],
-                        files:[{
-                            name:'deck.png',
-                            attachment:canvasDeck(this.players[0])
-                        }]
-                    })
-                }else{
-                    player.message.edit({
-                        embeds:[unoEmbedPrivate({player:this.players[0]})],
-                        files:[{
-                            name:'deck.png',
-                            attachment:canvasDeck(this.players[0])
-                        }]
-                    })
-                }
+        this.players.forEach(async(player)=>{
+            //if message not created
+            let possibleCards = player.deck.filter(i=>this.can(this.currentCard,i))
+            let embedPrivate = unoEmbedPrivate({
+                player,
+                users:this.players.filter(i=>i.id!==player.id),
+                currentCard:this.currentCard.card,
+                possiblePlays: player.alreadyBought?possibleCards:['buy',...possibleCards],
+                yourTurn: player.id === this.players[this.turn].id,
+            })
+            
+            if(player.message===undefined){
+                player.message = await this.client.users.cache.get(this.players[0].id)?.send({
+                    embeds:[embedPrivate],
+                    files:[{
+                        name:'deck.png',
+                        attachment:canvasDeck(this.players[0])
+                    }],
+                })
+            }else{
+                player.message.edit({
+                    embeds:[embedPrivate],
+                    files:[{
+                        name:'deck.png',
+                        attachment:canvasDeck(this.players[0])
+                    }],
+                })
             }
         })
 
@@ -209,80 +251,172 @@ export default class Uno{
     }
 
     async start(){
-        this.setMonte()
         this.distribui()
         this.render()
+        this.resolvePendencies(this.players[0])
+        // console.log(this.players[0].deck.map((i=>this.getInfoCards(i))))
     }
 
-    compra(){
+    compra(player:UserI,amont?:number){
+        let b = amont ? amont : this.amountBuy
+        for ( let a=0; a<b; a++ ) {
+            if(this.monte.length===0){
+                this.setMonte()
+            }
+            player.deck.push(this.removeRandom(this.monte))
+        }
+    }
 
+    async changeCardIfBlack(player:UserI){
+        if(this.currentCard.color==='black'){
+            let message = await player.message?.reply('which color?')
+            let reactions = ['🟥','🟩','🟦','🟨']
+            reactions.forEach((i)=>{
+                message?.react(i)
+            })
+            let collector = message?.createReactionCollector({
+                filter:(reaction,user)=>{
+                    return Boolean(reactions.find(i=>i===reaction.emoji.name)) && user.id === player.id
+                },
+                max:1
+            })
+
+            collector?.on('collect',(reaction)=>{
+                switch(reaction.emoji.name){
+                    case '🟥':
+                        this.currentCard.color='red'
+                    break;
+                    case '🟩':
+                        this.currentCard.color='green'
+                    break;
+                    case '🟦':
+                        this.currentCard.color='blue'
+                    break;
+                    case '🟨':
+                        this.currentCard.color='yellow'
+                    break;
+                }
+            })
+            collector?.once('end',async ()=>{
+                await message?.reactions.removeAll()
+                await message?.delete()
+            })
+        }
     }
     
 
-    can(target:cards, played:cards){
-        interface infoCard{
-            reverse:boolean
-            block:boolean
-            changeColor:boolean
-            number:boolean
-            buy: 2|4|false
-            color:'g'|'r'|'y'|'b'|'black'|false
-            type:'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'0'|'reverse'|'block'|'plus2'|'color'|'color4'|false
+    can(target:cards|infoCard, played:cards){
+        
+        let targetInfo = typeof target==='string' ? this.getInfoCards(target) : target
+        let playedInfo = this.getInfoCards(played)
+        if((!targetInfo.type)||(!playedInfo.type)||(!targetInfo.color)||(!playedInfo.color)){
+            throw new Error('false card type/color')
         }
-        function getInfoCards(card:cards):infoCard{
-            if(card=="color4"){
-                return {
-                    number:false,
-                    reverse:false,
-                    block:false,
-                    buy:4,
-                    changeColor:true,
-                    color:'black',
-                    type: 'color4',
-                }
-            }else{
-                function getColor(card:string):infoCard['color']{
-                    let char = card.charAt(card.length-1)
-                    return check(char)?char:false
-                }
-                function check(char:string|boolean):char is infoCard['color']{
-                    return char==='g'||char==='r'||char==='y'||char==='b'||char==='black'
-                }
 
-                function getCardType(card:Exclude<cards,'color4'>):infoCard['type']{
-                    if(card ==='color'){
-                        return 'color'
-                    }else{ 
-                        let typeCard = card.slice(0,card.length-1)
-                        return checkType(typeCard)?typeCard:false
-                    }
-                }
-                function checkType(char:string|boolean):char is infoCard['type']{
-                    return char === '1'|| char === '2'|| char === '3'|| char === '4'|| char === '5'|| char === '6'|| char === '7'|| char === '8'|| char === '9'|| char === '0'|| char === 'reverse'|| char === 'block'|| char === 'plus2'|| char === 'color'|| char === 'color4'
-                }
-                let carta = getCardType(card)
 
-                function isNumberCard(card:infoCard['type']){
-                    return !Number.isNaN(card)
-                }
-                return {
-                    reverse: card.startsWith('reve'),
-                    block: card.startsWith('block'),
-                    buy: card.charAt(4)==='2'?2:false,
-                    changeColor: card === 'color',
-                    color:card==='color' ? 'black' : getColor(card),
-                    type: carta,
-                    number: isNumberCard(carta)
-                }
-            }
+        if(playedInfo.type==='color4'){
+            return true
         }
-        let targetInfo = getInfoCards(target)
-        let playedInfo = getInfoCards(played)
-        console.log(targetInfo,playedInfo)
+
+        if(targetInfo.buy&&(playedInfo.number||playedInfo.block||playedInfo.reverse)){
+            return false
+        }
+        
+        //acumular compras
+        if(targetInfo.buy&&playedInfo.buy){
+            return true
+        }
+
+        // if(playedInfo.type==='color'&&targetInfo.){
+        //     return false
+        // }
+        //mesma cor ou mesmo símbolo
+        if((targetInfo.color===playedInfo.color)||(targetInfo.type===playedInfo.type)){
+            console.log((targetInfo.color===playedInfo.color)&&targetInfo.color+'+'+ playedInfo.color+' => mesma cor')
+            console.log((targetInfo.type===playedInfo.type)&&targetInfo.type+'+'+ playedInfo.type+' => mesmo tipo')
+
+            // console.log('ablue blue')
+            return true
+        }
+
+
+        if(this.amountBuy&&playedInfo.buy){
+            return true
+        }
+
+
+        return false
+        
+    }
+    skip(){
+        this.turn = (this.turn+1)%this.players.length
+    }
+
+    async messageListener(player:UserI,cards:cards[],callback:((a:Collection<string,Message<boolean>>)=>void)){
+        (player.dmChannel||await player.createDM()).awaitMessages({
+            filter:(a)=>{
+                return (!a.inGuild()) && (player.id === a.author.id) && ((!!cards.find(i=>a.content===i) || (!player.alreadyBought&&a.content==='buy')))
+            },
+            max:1
+        }).then((a)=>callback(a))
+    }
+
+    async resolvePendencies(player:UserI){
+        //se houver algo para comprar e não ter cartas de compra
+        if(this.amountBuy&&player.deck.find(i=>!(this.getInfoCards(i).buy))){
+            this.compra(player,this.amountBuy)
+            this.amountBuy = 0
+            return this.skip()
+        }
+        if(this.block){
+            this.block = false
+            return this.skip()
+        }
+
+        let cards = removeDuplicates(player.deck.filter(i=>this.can(this.currentCard,i)));
+        this.messageListener(player,cards,async(collected)=>{
+            let message = collected.first()!
+            this.play(player,message.content==='buy'?'buy':cards.find(i=>message.content===i)!)
+        })
+
+
 
     }
 
-    play(){
+    async play(player:UserI,card:cards|'buy'){
 
+        if(card==='buy'){
+            if(this.amountBuy){
+                this.compra(player,this.amountBuy)
+                this.amountBuy = 0
+            }else{
+                player.alreadyBought = true
+                this.compra(player,1)
+                this.resolvePendencies(player)
+                    .then(()=>{player.alreadyBought=false})
+                
+            }
+        }else{
+            let info = this.getInfoCards(card)
+
+            player.deck.splice(player.deck.indexOf(card),1)
+            this.currentCard = info
+
+            if(info.color!=='black'){
+                if(info.reverse) {
+                    this.reverse()
+                    this.skip()
+                }
+                if(info.block){
+                    this.block = true
+                    this.skip()
+                }
+
+            }else{
+                this.changeCardIfBlack(player)
+            }
+        }
+        await player.message?.delete()
+        await this.render()
     }
 }

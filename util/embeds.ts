@@ -1,7 +1,8 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { SoundOptions } from "../structures/Music";
-import { UserI } from "../structures/Uno";
+import { cards, UserI } from "../structures/Uno";
 import titleParse from "./titleParse";
+import cardsUrl from '../cards.json'
 
 export function embedQueue(queue:SoundOptions[]|undefined){
     const embed = new EmbedBuilder()
@@ -31,15 +32,47 @@ export function lyricsQueue(title:string,lines:string[]){
 
 interface UnoOptions{
     player:UserI
+    users: UserI[]
+    currentCard:cards
+    possiblePlays:(cards|'buy')[]
+    yourTurn:boolean
 }
-export function unoEmbedPrivate({player}:UnoOptions){
+export function unoEmbedPrivate({
+    player,
+    users,
+    currentCard,
+    possiblePlays,
+    yourTurn
+}:UnoOptions){
     const embed = new EmbedBuilder()
         .setTitle(player.username)
-        .setFooter({text:'seu baralho'})
-            
+    
+    if(yourTurn){
+        embed.setFooter({text:'Sua vez'})
+    }
+
+    let plays = ''
+    possiblePlays.forEach((i,index)=>{
+        if(index+1===possiblePlays.length){
+            plays+=`${i}`
+        }else{
+            plays+=`${i}, `
+        }
+    })
+    embed.setDescription(`Jogadas possíveis: ${plays}`)
+
+    users.forEach(i=>{
+        embed.addFields({
+            name:i.username,
+            value:`${i.deck.length.toString()} cartas`
+        })
+    })
+    
+    embed.setThumbnail(cardsUrl[currentCard])
+    
     return embed
 }
-export function unoEmbedPlayers(user:UserI[]){
+export function unoEmbedPlayers(user:UserI[],currentCard:cards){
     const embed = new EmbedBuilder()
         .setTitle('Uno')
     user.forEach(i=>{
@@ -48,6 +81,7 @@ export function unoEmbedPlayers(user:UserI[]){
             value:`${i.deck.length.toString()} cartas`
         })
     })
+    embed.setThumbnail(cardsUrl[currentCard])
 
     return embed
 }

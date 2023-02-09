@@ -70,6 +70,7 @@ const ready:EventI<'ready'> = {
                 throw new Error(err);
             })
             console.log(`\x1b[32m%s\x1b[0m`,`[ready] bot started`)
+            process.stdout.write('\u0007');
             while(true){
                 client.user?.setPresence({
                     activities:[{
