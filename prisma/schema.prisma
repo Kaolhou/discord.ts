@@ -19,3 +19,10 @@ model logs {
   error     Json?
 //  options   JSON?
 }
+model conversations{
+  messageId       String    @id
+  conversationId  String 
+  channelId       String
+  userID          String
+  created_at            DateTime  @default(now())
+}

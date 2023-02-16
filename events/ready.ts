@@ -37,8 +37,13 @@ const ready:EventI<'ready'> = {
                     `File at path ${file} seems to incorrectly be exporting an event.`
                 );
             }
-
-            if(!(ignore.find(i=>i===command.data.toJSON().name))){
+            /**
+             * se o nomo do slash command estiver no `.commandignore`, ou se na build o commando for
+             * chatgpt então ignore o commando
+             */
+            if((ignore.find(i=>i===command.data.toJSON().name))||(__filename.endsWith('.js') && command.data.toJSON().name==='chatgpt')){ 
+                client.verbose ? console.log(`\x1b[31m%s\x1b[0m`,`[commands] ${command.data.name} ignored`) : null
+            }else{
                 client.commands.set(command.data.name, command)
 
                 var imports: Array<any> = [];
@@ -47,8 +52,6 @@ const ready:EventI<'ready'> = {
                 imports.map((i) => {
                     commandArr.push(i.data.toJSON());
                 });
-            }else{
-                client.verbose ? console.log(`\x1b[31m%s\x1b[0m`,`[commands] ${command.data.name} ignored`) : null
             }
         }))
         /**
@@ -64,7 +67,6 @@ const ready:EventI<'ready'> = {
             )
             .then(() => {
                 console.log(`\x1b[32m%s\x1b[0m`,`[commands] all commands loaded and submitted to discord`)
-                //console.log("commands loaded");
             })
             .catch((err) => {
                 throw new Error(err);
