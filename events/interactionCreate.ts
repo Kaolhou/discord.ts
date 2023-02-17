@@ -8,7 +8,7 @@ import { EventI } from "../util/types";
 const interactionCreate:EventI<'interactionCreate'> = {
     eventName: 'interactionCreate',
     async exe(client, interaction) {
-        if(interaction.isCommand()){
+        if(interaction.isChatInputCommand()){
             //collection
             const command = client.commands.get(interaction.commandName)
             //checar permissões

@@ -9,31 +9,28 @@ const play:CommandI = {
      * outro arquivo do projeto com a finalidade de um comando de música poder alterar o estado de
      * uma voice connection dentro da classe
      */
-    music:undefined,
     async exe(interaction, client) {
-
         let connection = client.connections.get(interaction.guildId!)
         let musicToQueue = interaction.options.get('url',true).value as string
 
         //se não houver uma conexão de voz, então ela é feita, caso tenha, então apenas adiciona a música na fila
         if(connection){
 
-            this.music = connection
-            if(this.music.queue.length == 0){
-                await this.music.addToQueue(interaction,musicToQueue)
-                this.music.playMusic()
+            if(connection.queue.length == 0){
+                await connection.addToQueue(interaction,musicToQueue)
+                connection.playMusic()
             }else{
-                await this.music.addToQueue(interaction,musicToQueue)
+                await connection.addToQueue(interaction,musicToQueue)
             }
             
 
         }else{
             
-            this.music = new Music(client,interaction)
+            connection = new Music(client,interaction)
             
-            await this.music.addToQueue(interaction,musicToQueue)
+            await connection.addToQueue(interaction,musicToQueue)
             
-            this.music.playMusic()
+            connection.playMusic()
         }
 
     },
