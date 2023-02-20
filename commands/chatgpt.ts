@@ -44,6 +44,7 @@ const chatgpt:CommandI = {
             interaction.editReply('houve um erro, possivelmente os servidores estão em excesso de uso')
         }
     },
+    acceptDM:true,
     data: new SlashCommandBuilder()
         .setName('chatgpt')
         .setDescription('ask a question for chatgpt')

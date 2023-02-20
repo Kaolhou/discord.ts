@@ -84,6 +84,7 @@ const help:CommandI = {
             })
         }
     },
+    acceptDM:true,
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('vou te ajudar')

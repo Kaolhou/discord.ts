@@ -1,13 +1,13 @@
-import { Client, ClientEvents, CommandInteraction, Interaction, PermissionResolvable, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, ClientEvents, PermissionResolvable, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js'
 import { Main } from '..'
-import Music from '../structures/Music'
 
 type eventName = keyof ClientEvents
-//type 
+
 export interface CommandI{
     data: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">|SlashCommandSubcommandsOnlyBuilder
-    exe: (interaction: CommandInteraction, client: Main)=>Promise<unknown>|unknown
-    perms?:PermissionResolvable
+    exe: (interaction: ChatInputCommandInteraction, client: Main)=>Promise<unknown>|unknown
+    acceptDM?:boolean,
+    perms?:PermissionResolvable,
 }
 export interface EventI<T extends eventName>{
     eventName: T

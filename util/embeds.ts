@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { SoundOptions } from "../structures/Music";
-import { cards, UserI } from "../structures/Uno";
+import { cards, infoCard, UserI } from "../structures/Uno";
 import titleParse from "./titleParse";
 import cardsUrl from '../cards.json'
 
@@ -36,13 +36,15 @@ interface UnoOptions{
     currentCard:cards
     possiblePlays:(cards|'buy')[]
     yourTurn:boolean
+    color?:Exclude<infoCard['color'],'black'>
 }
 export function unoEmbedPrivate({
     player,
     users,
     currentCard,
     possiblePlays,
-    yourTurn
+    yourTurn,
+    color
 }:UnoOptions){
     const embed = new EmbedBuilder()
         .setTitle(player.username)
@@ -59,7 +61,16 @@ export function unoEmbedPrivate({
             plays+=`${i}, `
         }
     })
-    embed.setDescription(`Jogadas possíveis: ${plays}`)
+    if(color){
+        embed.addFields(
+            { name: 'Cor escolhida:', value: color },
+            { name: '\u200B', value: '\u200B' },
+        )
+    }
+    embed.addFields({
+        name:"jogadas possíveis:",
+        value:plays
+    })
 
     users.forEach(i=>{
         embed.addFields({

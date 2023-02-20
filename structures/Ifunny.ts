@@ -100,11 +100,6 @@ class Ifunny{
 
     }
 
-    // async login(){
-    //     this.token = await this.getToken()
-    //     console.log(this.token)
-    // }
-
     getKeyToken(params:'sound=off'|'CID'|"x-csrf-token") {
         return this.token![params]
     }

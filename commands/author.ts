@@ -24,6 +24,7 @@ const author:CommandI = {
             embeds:[embed]
         })
     },
+    acceptDM:true,
     data: new SlashCommandBuilder()
         .setName('author')
         .setDescription('show about the creator of bot')

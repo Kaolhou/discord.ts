@@ -6,6 +6,7 @@ const ping:CommandI = {
     async exe(interaction, client) {
         interaction.editReply(`PONG:ping_pong::ping_pong:\n${client.ws.ping}ms`)
     },
+    acceptDM:true,
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('get locale ping')

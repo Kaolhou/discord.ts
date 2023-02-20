@@ -1,8 +1,9 @@
-import { Collection, CommandInteraction, Message, User } from "discord.js";
+import { Collection, CommandInteraction, Message, ReactionCollector, User } from "discord.js";
 import {  unoEmbedPlayers, unoEmbedPrivate } from "../util/embeds";
 import canvasDeck from "../util/canvasDeck";
 import { Main } from "..";
 import removeDuplicates from "../util/removeDuplicates";
+import EventEmitter from 'events'
 
 interface UnoParams{
     players:User[]
@@ -46,6 +47,7 @@ export default class Uno{
     interaction:CommandInteraction
     client:Main
     currentCard:infoCard
+    emitter:EventEmitter
     
     constructor({players,interaction,client}:UnoParams){
         client.verbose ? console.log('[Uno] New uno game started') : null
@@ -54,6 +56,9 @@ export default class Uno{
         this.client = client
         this.setMonte()
         this.currentCard = this.getFirst()
+        this.emitter =  new EventEmitter({
+            captureRejections:true
+        });
 
         this.awaitToPlay()
     }
@@ -76,6 +81,9 @@ export default class Uno{
         const el = array.splice(random, 1)[0];
         return el
     };
+    getHandler(){
+        return this.emitter
+    }
 
     async awaitToPlay(){
         let str = ''
@@ -117,6 +125,9 @@ export default class Uno{
             message.edit(`faltou gente reagir`)
         })
     }
+    
+    private getPlayableCards = (player:UserI) => 
+        player.deck.filter(i=>this.can(this.currentCard,i))
 
     getInfoCards(card:cards):infoCard{
         if(card=="color4"){
@@ -201,9 +212,9 @@ export default class Uno{
         this.players.forEach(i=>this.compra(i,9))
     }
 
-    async render(){
-        //edit the public channel
+    async render(changeColor=false,skiped?:UserI){
 
+        //edit the public channel
         if(this.message){
             await this.message.edit({
                 embeds:[unoEmbedPlayers(this.players,this.currentCard.card)],
@@ -215,46 +226,43 @@ export default class Uno{
             }) : undefined;
         }
 
-
         //private message
         this.players.forEach(async(player)=>{
             //if message not created
-            let possibleCards = player.deck.filter(i=>this.can(this.currentCard,i))
+            let possibleCards = this.getPlayableCards(player)
             let embedPrivate = unoEmbedPrivate({
                 player,
                 users:this.players.filter(i=>i.id!==player.id),
                 currentCard:this.currentCard.card,
                 possiblePlays: player.alreadyBought?possibleCards:['buy',...possibleCards],
                 yourTurn: player.id === this.players[this.turn].id,
+                color: changeColor&&this.currentCard.color!=='black'?this.currentCard.color:undefined
+            })
+            if(player.message){
+                await player.message?.delete()
+                player.message=undefined
+            }
+            
+            player.message = await this.client.users.cache.get(player.id)?.send({
+                embeds:[embedPrivate],
+                files:[{
+                    name:'deck.png',
+                    attachment:canvasDeck(player)
+                }],
             })
             
-            if(player.message===undefined){
-                player.message = await this.client.users.cache.get(this.players[0].id)?.send({
-                    embeds:[embedPrivate],
-                    files:[{
-                        name:'deck.png',
-                        attachment:canvasDeck(this.players[0])
-                    }],
-                })
-            }else{
-                player.message.edit({
-                    embeds:[embedPrivate],
-                    files:[{
-                        name:'deck.png',
-                        attachment:canvasDeck(this.players[0])
-                    }],
-                })
-            }
         })
-
-        
+        if(skiped){
+            let message = await skiped.message?.reply('pulado devido falta de possibilidades')
+            await new Promise(async r=> setTimeout(r,1000*20))
+            await message?.delete()
+        }
     }
 
     async start(){
         this.distribui()
         this.render()
-        this.resolvePendencies(this.players[0])
-        // console.log(this.players[0].deck.map((i=>this.getInfoCards(i))))
+        this.resolvePendencies(this.players[this.turn])
     }
 
     compra(player:UserI,amont?:number){
@@ -297,10 +305,13 @@ export default class Uno{
                     break;
                 }
             })
-            collector?.once('end',async ()=>{
-                await message?.reactions.removeAll()
-                await message?.delete()
-            })
+
+            await new Promise((resolve) => {
+                collector?.on("end", async () => {
+                    await message?.delete();
+                    resolve("");
+                });
+            });
         }
     }
     
@@ -313,12 +324,11 @@ export default class Uno{
             throw new Error('false card type/color')
         }
 
-
-        if(playedInfo.type==='color4'){
+        if(playedInfo.color==='black'){
             return true
         }
 
-        if(targetInfo.buy&&(playedInfo.number||playedInfo.block||playedInfo.reverse)){
+        if(targetInfo.buy&&this.amountBuy&&(playedInfo.number||playedInfo.block||playedInfo.reverse)){
             return false
         }
         
@@ -332,29 +342,27 @@ export default class Uno{
         // }
         //mesma cor ou mesmo símbolo
         if((targetInfo.color===playedInfo.color)||(targetInfo.type===playedInfo.type)){
-            console.log((targetInfo.color===playedInfo.color)&&targetInfo.color+'+'+ playedInfo.color+' => mesma cor')
-            console.log((targetInfo.type===playedInfo.type)&&targetInfo.type+'+'+ playedInfo.type+' => mesmo tipo')
-
-            // console.log('ablue blue')
             return true
         }
-
 
         if(this.amountBuy&&playedInfo.buy){
             return true
         }
 
-
         return false
         
     }
-    skip(){
+    async skip(changedColor=false,skiped?:UserI){
         this.turn = (this.turn+1)%this.players.length
+        await this.render(changedColor,skiped)
     }
 
     async messageListener(player:UserI,cards:cards[],callback:((a:Collection<string,Message<boolean>>)=>void)){
         (player.dmChannel||await player.createDM()).awaitMessages({
             filter:(a)=>{
+                if((!a.inGuild()) && (player.id === a.author.id) && ((!!cards.find(i=>a.content===i) || (!player.alreadyBought&&a.content==='buy')))){
+                    console.log(a.content)
+                }
                 return (!a.inGuild()) && (player.id === a.author.id) && ((!!cards.find(i=>a.content===i) || (!player.alreadyBought&&a.content==='buy')))
             },
             max:1
@@ -373,50 +381,73 @@ export default class Uno{
             return this.skip()
         }
 
-        let cards = removeDuplicates(player.deck.filter(i=>this.can(this.currentCard,i)));
+        let cards = removeDuplicates(this.getPlayableCards(player));
         this.messageListener(player,cards,async(collected)=>{
             let message = collected.first()!
             this.play(player,message.content==='buy'?'buy':cards.find(i=>message.content===i)!)
         })
+    }
 
+    async victory(player:UserI){
+        this.emitter.emit('win')
+        await player.message?.delete()
+        player.message=undefined
 
-
+        this.players.forEach(async i=>{
+            await i.send(`${player.username} ganhou`)
+        })
     }
 
     async play(player:UserI,card:cards|'buy'){
-
-        if(card==='buy'){
-            if(this.amountBuy){
-                this.compra(player,this.amountBuy)
-                this.amountBuy = 0
+        let changedColor = false
+        let possibleCards = this.getPlayableCards(player)
+        if(possibleCards.length){
+            if(card==='buy'){
+                if(this.amountBuy){
+                    this.compra(player,this.amountBuy)
+                    this.amountBuy = 0
+                }else{
+    
+                    player.alreadyBought = true
+                    this.compra(player,1)
+    
+                    await this.render()
+    
+                    let cards = removeDuplicates(this.getPlayableCards(player));
+                    this.messageListener(player,cards,async(collected)=>{
+                        let message = collected.first()!
+                        await this.play(player,message.content==='buy'?'buy':cards.find(i=>message.content===i)!)
+                        player.alreadyBought=false
+                    })
+    
+                    return                
+                }
             }else{
-                player.alreadyBought = true
-                this.compra(player,1)
-                this.resolvePendencies(player)
-                    .then(()=>{player.alreadyBought=false})
-                
+                let info = this.getInfoCards(card)
+    
+                player.deck.splice(player.deck.indexOf(card),1)
+                this.currentCard = info
+                if(!player.deck.length) return this.victory(player)
+    
+                if(info.color!=='black'){
+    
+                    if(info.buy) this.amountBuy+=info.buy
+    
+                    if(info.reverse) this.reverse()
+    
+                    if(info.block) this.block = true
+    
+                }else{
+                    changedColor = true
+                    await this.changeCardIfBlack(player)
+                }
             }
+            this.skip(changedColor)
+    
+    
+            await this.resolvePendencies(this.players[this.turn])
         }else{
-            let info = this.getInfoCards(card)
-
-            player.deck.splice(player.deck.indexOf(card),1)
-            this.currentCard = info
-
-            if(info.color!=='black'){
-                if(info.reverse) {
-                    this.reverse()
-                    this.skip()
-                }
-                if(info.block){
-                    this.block = true
-                    this.skip()
-                }
-
-            }else{
-                this.changeCardIfBlack(player)
-            }
+            this.skip(changedColor,player)
         }
-        await player.message?.delete()
-        await this.render()
     }
 }

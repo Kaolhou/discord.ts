@@ -1,6 +1,5 @@
 import { SlashCommandBuilder, User } from "discord.js"
 import Uno from "../structures/Uno"
-// import removeDuplicates from "../util/removeDuplicates"
 import { CommandI } from "../util/types"
 
 function removeDuplicates(arr:User[]){
@@ -31,13 +30,10 @@ const uno:CommandI = {
             interaction,
             client
         })
-        // let winner = uno.players.find(i=>i.deck.length===0)
-        // while(!(uno.players.find(i=>i.deck.length===0))){
-
-        // }
-        
-        
-        
+        const events = uno.getHandler()
+        events.on('win',()=>{
+            uno = null
+        })
     },
     data: new SlashCommandBuilder()
         .setName('uno')

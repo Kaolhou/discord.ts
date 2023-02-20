@@ -57,6 +57,7 @@ const download:CommandI = {
             })
         }
     },
+    acceptDM:true,
     data: new SlashCommandBuilder()
         .setName('download')
         .setDescription('download a yt video')
