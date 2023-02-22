@@ -7,7 +7,7 @@ export interface CommandI{
     data: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">|SlashCommandSubcommandsOnlyBuilder
     exe: (interaction: ChatInputCommandInteraction, client: Main)=>Promise<unknown>|unknown
     acceptDM?:boolean,
-    perms?:PermissionResolvable,
+    perms?:PermissionResolvable[],
 }
 export interface EventI<T extends eventName>{
     eventName: T

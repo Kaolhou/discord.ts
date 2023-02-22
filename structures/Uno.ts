@@ -337,10 +337,6 @@ export default class Uno{
             return true
         }
 
-        // if(playedInfo.type==='color'&&targetInfo.){
-        //     return false
-        // }
-        //mesma cor ou mesmo símbolo
         if((targetInfo.color===playedInfo.color)||(targetInfo.type===playedInfo.type)){
             return true
         }

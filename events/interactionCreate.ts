@@ -19,6 +19,14 @@ const interactionCreate:EventI<'interactionCreate'> = {
                 })
                 return
             }
+            if(command?.perms){
+                if(!(command.perms.map((i)=>interaction.memberPermissions?.has(i)).every((i)=>i===true)))
+                    await interaction.reply({
+                        ephemeral:true,
+                        content:"você não tem permissão para usar comandos"
+                    })
+                    return
+            }
             if(!interaction.inGuild()&&!command?.acceptDM){
                 await interaction.reply({
                     ephemeral:true,
@@ -34,16 +42,8 @@ const interactionCreate:EventI<'interactionCreate'> = {
                     command: command?.data.toJSON().name!,
                 }
             })
-            // verificar se é dm
-            if(!interaction.inGuild()){
-                await interaction.reply('eba')
-            }else{
-                //checar permissões
-                
-                await interaction.deferReply()
-                command?.exe(interaction,client)
-
-            }
+            await interaction.deferReply()
+            command?.exe(interaction,client)
         }
     },
     once:false

@@ -60,7 +60,7 @@ export class Main extends Client{
             if (event.once)
                 this.once(event.eventName, event.exe.bind(null, this));
                 
-            else this.on(event.eventName, event.exe.bind(null, this));
+            else this.on(event.eventName,(...args)=>event.exe(this,...args));
             this.verbose ? console.log(`\x1b[33m%s\x1b[0m`,`[events] ${event.eventName} loaded`) : null
         }))
         console.log(`\x1b[32m%s\x1b[0m`,`[events] all events loaded`)
