@@ -13,35 +13,33 @@ const interactionCreate:EventI<'interactionCreate'> = {
             //todo criar lista negra
             //checar permissões
             if(interaction.inGuild()?!interaction.memberPermissions?.has('UseApplicationCommands'):false){
-                await interaction.reply({
+                return await interaction.reply({
                     ephemeral:true,
                     content:"você não tem permissão para usar comandos"
                 })
-                return
             }
             if(command?.perms){
                 if(!(command.perms.map((i)=>interaction.memberPermissions?.has(i)).every((i)=>i===true)))
-                    await interaction.reply({
+                    return await interaction.reply({
                         ephemeral:true,
                         content:"você não tem permissão para usar comandos"
                     })
-                    return
             }
             if(!interaction.inGuild()&&!command?.acceptDM){
-                await interaction.reply({
+                return await interaction.reply({
                     ephemeral:true,
                     content:"esse comando não pode ser usado em uma DM"
                 })
-                return
             }
             //criar log no banco de dados
             await client.prisma.logs.create({
                 data: {
                     isError:false,
                     authorId:interaction.user.id,
-                    command: command?.data.toJSON().name!,
+                    command: command!.data.toJSON().name,
                 }
             })
+            //executar command
             await interaction.deferReply()
             command?.exe(interaction,client)
         }

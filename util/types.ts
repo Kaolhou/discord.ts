@@ -11,7 +11,7 @@ export interface CommandI{
 }
 export interface EventI<T extends eventName>{
     eventName: T
-    exe: (client:Main,...args:ClientEvents[T])=>Promise<void>|void
+    exe: (client:Main,...args:ClientEvents[T])=>Promise<any>|any
     once:boolean
 
 }
