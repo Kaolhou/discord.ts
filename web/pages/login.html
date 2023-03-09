@@ -21,66 +21,20 @@
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
         
-        async function getAdminGuilds(botToken) {
-            try {
-              const response = await axios.post('https://discord.com/api/oauth2/token', {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                  client_id: '862763521769734154',
-                  client_secret: 'ODYyNzYzNTIxNzY5NzM0MTU0.GYkX5V.FAdwZKk5VhjUAX8CYN6E0xM70aLHZGki9fbGwk',
-                  code:botToken,
-                  grant_type: 'authorization_code',
-                  redirect_uri: `http://localhost:3000`,
-                  scope: 'identify',
-                }).toString(),
-                validateStatus: (status)=>true,
-              });
-          
-              const guilds = response.data;
-              console.log(guilds)
-              const adminGuilds = guilds.filter(guild => guild.owner && (guild.permissions & 0x00000020) === 0x00000020);
-          
-              return adminGuilds;
-            } catch (error) {
-              console.error(error);
-              return [];
-            }
-          }
-          async function validateToken(token) {
-            try {
-                const response = await axios.get('https://discord.com/api/v10/oauth2/token', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data:{
-                        'client_id': process.env.CLIENT_ID,
-                        'client_secret': process.env.TOKEN,
-                        'grant_type': 'authorization_code',
-                        'code': token,
-                        'redirect_uri': 'http://localhost:3000'
-                    }
-                });
-                return response.status === 200;
-            } catch (error) {
-                return false;
-            }
-        }
+        
         
 
-        document.getElementById('login').addEventListener("submit", async function(e) {
+        /*document.getElementById('login').addEventListener("submit", async function(e) {
             e.preventDefault();
             const url = new URL(document.URL)
             /*let a = await axios.post(`${url.protocol}//${url.host}/login`,{"sid":getCookie('sid'),"discordCode":getCookie('discordCode')},{
                 validateStatus: (status)=>true,
                 httpsAgent: this.agent
-            })*/
+            })
             console.log(getCookie('discordCode'))
             let a = await getAdminGuilds(getCookie('discordCode'))
             console.log(a.data)
-        })
+        })*/
         
     </script>
 </body>
