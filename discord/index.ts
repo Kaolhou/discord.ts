@@ -6,6 +6,7 @@ import Music from "./structures/Music";
 import { PrismaClient } from "@prisma/client";
 import { ImportError, NoEventsProvided } from "./structures/Errors";
 import path from 'path'
+import {spawn} from 'child_process'
 import fetch, { Headers, Request, Response } from 'node-fetch';
 config()
 interface MainOptions extends ClientOptions{
@@ -28,6 +29,7 @@ export class Main extends Client{
         this.loadEvents()
         this.login(process.env!.TOKEN!)
     }
+    
     /**
      * Função responsável por automáticamente importar os eventos disponíveis na pasta `events`, todos
      * os arquivos devem **retornar** como **default** um objeto que siga o tipo `EventI<T>` disponibilizado em
@@ -43,11 +45,7 @@ export class Main extends Client{
         }
         await Promise.all(events.map(async (file)=>{
             try {
-                if(__filename.endsWith('.ts')){
-                    var event = (await import("file://"+path.resolve(__dirname,'events',file))).default as EventI<any>;
-                }else{
-                    var event = (await import(path.resolve(__dirname,'events',file))).default as EventI<any>;
-                }
+                var event = (await import(path.resolve(__dirname,'events',file))).default as EventI<any>;
             } catch (error) {
                 throw new ImportError('Import Error')
             }

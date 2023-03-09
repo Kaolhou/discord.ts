@@ -7,6 +7,7 @@ import path from 'path'
 import { Main } from "..";
 import { ImportError } from "../structures/Errors";
 import fs from 'fs'
+import Web from "../structures/Web";
 
 /**
  * Evento responsável por toda a inicialização do bot, ele importa todos os commandos,
@@ -19,15 +20,12 @@ const ready:EventI<'ready'> = {
         const commandArr: Array<CommandI> = [];
         const ignore = fs.readFileSync(process.cwd()+'\\.commandignore','utf-8').split('\n')
         const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
+        const web = new Web();
 
         await Promise.all(commands.map(async (file)=>{
             
             try {
-                if(__filename.endsWith('.ts')){
-                    var command = (await import("file://"+path.resolve(__dirname,'..','commands',file))).default as CommandI;
-                }else{
-                    var command = (await import(path.resolve(__dirname,'..','commands',file))).default as CommandI;
-                }            
+                var command = (await import(path.resolve(__dirname,'..','commands',file))).default as CommandI;         
             } catch (error) {
                 console.log(error)
                 throw new ImportError('Import Error')
@@ -73,17 +71,20 @@ const ready:EventI<'ready'> = {
             })
             console.log(`\x1b[32m%s\x1b[0m`,`[ready] bot started`)
             process.stdout.write('\u0007');
+            
+            web.loadWebService()
+
             while(true){
                 client.user?.setPresence({
+                    status: client.ws.ping<=600?'online':'idle',
                     activities:[{
-                        name:'/help',
-                        type:ActivityType.Playing
+                        name:client.ws.ping<=600?'/help':undefined,
+                        type: client.ws.ping<=600?ActivityType.Playing:undefined
                     }]
                 })
                 await new Promise(resolve => setTimeout(resolve, 1000*35))
                 client.verbose ? console.log(`[websocket] ping: ${client.ws.ping}`) : null
             }
-            // console.log("bot started")
     },
     once:true
 }

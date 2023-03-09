@@ -69,6 +69,7 @@ const meme:CommandI = {
         }
     },
     //todo trocar choice por subcommand
+    acceptDM:true,
     data:new SlashCommandBuilder()
         .setName('meme')
         .setDescription('show a meme')

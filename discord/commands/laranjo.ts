@@ -54,7 +54,7 @@ const laranjo:CommandI = {
         ctx.fillText(formattedString,50, 50, 350)
 
         const laranjo = new Image()
-        laranjo.src = path.resolve(process.cwd(), 'media', "laranjo.jpg");
+        laranjo.src = path.resolve(process.cwd(),'discord', 'media', "laranjo.jpg");
 
         ctx.drawImage(laranjo,WIDTH-laranjo.width,0)
 

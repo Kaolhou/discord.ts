@@ -18,10 +18,16 @@ Se estiver interessado no projeto pode iniciar em sua máquina seguindo as segui
     <!-- * PATH_MEMES **`Caminho que leva à pasta de memes`** -->
     <!-- * CHANNEL_MEMES **`Canal onde os memes serão enviados diariamente`** -->
     * DATABASE_URL **`postgresql://<user>:<password>@<host>:<port>/<database>`**
+    * OPEN_AI_KEY **`Chave de api da open ai para usar o chatgpt`**
+    * PORT **`Porta do serviço`**
+    * ADDRESS **`Endereço IP do serviço`**
 
-3. O projeto conta com o ORM [prisma](https://www.prisma.io), para enviar o **schema** no banco de dados **postgresql** digite no terminal *`npx prisma db push`*
-4. Para executar em desenvolvimento utilize *`npm run dev`*, em desenvolvimento é usado nodemon, ou seja, a cada alteração salva, reinicia o servidor
-5. Para iniciar o **processo de build** digite no terminal *`npm run build`* para criar a pasta *build* contendo arquivos TypeScript convertidos para JavaScript, para execuar a build solte *`npm start`*
+3. Na pasta `web` crie uma pasta `credentials` contendo a chave privada e certificado para iniciar um protocolo **https** para isso tenha baixado [OpenSSL](https://www.openssl.org/source/) e execute:
+   1.  `openssl genpkey -algorithm RSA -out privateKey.key`
+   2.  `openssl req -new -key privateKey.key -out certificado.csr`
+4. O projeto conta com o ORM [prisma](https://www.prisma.io), para enviar o **schema** no banco de dados **postgresql** digite no terminal *`npx prisma db push`*
+5. Para executar em desenvolvimento utilize *`npm run dev`*, em desenvolvimento é usado nodemon, ou seja, a cada alteração salva, reinicia o servidor
+6. Para iniciar o **processo de build** digite no terminal *`npm run build`* para criar a pasta *build* contendo arquivos TypeScript convertidos para JavaScript, para execuar a build solte *`npm start`*
 
 
 ## Contribuição

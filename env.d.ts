@@ -8,6 +8,10 @@ declare global{
             MEME_ENDPOINT:string
             NODE_ENV:'production'|undefined
             OPEN_AI_KEY:string
+            PORT:string
+            ADDRESS:string
+            OAUTH2:string
+            CLIENT_SECRET:string
         }
     }
 }
