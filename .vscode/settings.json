@@ -1,0 +1,10 @@
+{
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "material-icon-theme.folders.associations": {
+        "media":"images"
+    },
+    "material-icon-theme.files.associations": {
+        ".commandignore":"command"
+    }
+}
