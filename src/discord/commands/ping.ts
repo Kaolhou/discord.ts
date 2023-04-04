@@ -11,7 +11,9 @@ class Ping extends Command {
     client: Main,
     interaction: ChatInputCommandInteraction<CacheType>
   ): Promise<void> {
-    await interaction.editReply("foi");
+    await interaction.editReply(
+      `PONG!!:table_tennis::table_tennis:\n${client.ws.ping}ms`
+    );
   }
 }
 

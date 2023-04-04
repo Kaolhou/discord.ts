@@ -1,6 +1,20 @@
 import Command from "../classes/bases/Command";
 import cavalo from "./cavalo";
+import next from "./next";
+import pause from "./pause";
 import ping from "./ping";
 import play from "./play";
+import queue from "./queue";
+import shuffle from "./shuffle";
+import unpause from "./unpause";
 
-export default [ping, cavalo, play] as Command[];
+export default [
+  ping,
+  cavalo,
+  play,
+  next,
+  pause,
+  unpause,
+  shuffle,
+  queue,
+] as Command[];

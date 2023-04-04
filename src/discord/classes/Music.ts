@@ -2,6 +2,7 @@ import { stream, validate, playlist_info } from "play-dl";
 import {
   createAudioPlayer,
   AudioPlayerStatus,
+  VoiceConnectionStatus,
   VoiceConnection,
   joinVoiceChannel,
   createAudioResource,
@@ -11,9 +12,9 @@ import { CommandInteraction, GuildMember } from "discord.js";
 import path from "path";
 import { LocaleResponses } from "../../types";
 // import { musicEmbed } from "../embeds/musicEmbed";
-import format from "../../util/format";
+import playlistEmbed from "../embeds/playlistEmbed";
 
-interface SoundOptions {
+export interface SoundOptions {
   link: string;
   title: string;
   requestedUserId: string;
@@ -57,12 +58,15 @@ export default class Music {
   private mediaFolder = path.resolve(process.cwd(), "src", "media", "audios");
   public connection: VoiceConnection | undefined;
   public channel = "";
-
+  public isPlaying = false;
   guild;
   client;
+  guildId;
   constructor(client: Main, interaction: CommandInteraction) {
     this.client = client;
     this.guild = client.guilds.cache.get(interaction.guildId!);
+    this.guildId = interaction.guildId;
+    this.channel = interaction.channelId;
     this.connect(interaction);
     this.loadEvents();
   }
@@ -70,9 +74,11 @@ export default class Music {
   async addToQueue(
     interaction: CommandInteraction,
     link: string,
-    isLocal = false
+    isLocal = false,
+    message?: string
   ) {
     if (isLocal) {
+      if (!message) return;
       this.queue.push({
         isLocal,
         link,
@@ -80,7 +86,7 @@ export default class Music {
         title: link,
       });
       interaction.editReply({
-        content: "CAVALO!!!",
+        content: message,
       });
     } else {
       const valid = await validate(link);
@@ -105,13 +111,15 @@ export default class Music {
           });
         });
 
-        await interaction.editReply(
-          format(
-            RESPONSES.someVideosAdded[interaction.locale] ||
-              RESPONSES.someVideosAdded["en-US"],
-            videos.length
-          )
-        );
+        await interaction.editReply({
+          embeds: [
+            playlistEmbed(
+              videos.map((i) => i.title!),
+              interaction.locale,
+              interaction.user.id
+            ),
+          ],
+        });
       } else if (valid === "yt_video") {
         this.queue.push({
           isLocal,
@@ -133,6 +141,23 @@ export default class Music {
     }
   }
 
+  async next() {
+    this.player.stop();
+    this.isPlaying = false;
+    this.queue.shift();
+    await this.playMusic();
+  }
+
+  pause() {
+    this.player.pause();
+    this.isPlaying = false;
+  }
+
+  unpause() {
+    this.player.unpause();
+    this.isPlaying = true;
+  }
+
   public async playMusic() {
     const current_item = this.queue[0];
 
@@ -150,6 +175,7 @@ export default class Music {
     }
 
     this.connection?.subscribe(this.player);
+    this.isPlaying = true;
   }
 
   // isConnected() {}
@@ -186,6 +212,11 @@ export default class Music {
   }
 
   private loadEvents() {
+    this.connection!.on(VoiceConnectionStatus.Disconnected, () => {
+      this.player.stop();
+      this.queue.slice(0, 0);
+      this.client.voiceConnections.delete(this.guildId!);
+    });
     this.player.on(AudioPlayerStatus.Idle, () => {
       switch (this.loopStatus) {
         case "off":

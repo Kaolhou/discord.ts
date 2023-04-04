@@ -17,15 +17,30 @@ class Cavalo extends Command {
     //se não houver uma conexão de voz, então ela é feita, caso tenha, então apenas adiciona a música na fila
     if (connection) {
       if (connection.queue.length == 0) {
-        await connection.addToQueue(interaction, "cavalo.mp3", true);
+        await connection.addToQueue(
+          interaction,
+          "cavalo.mp3",
+          true,
+          "CAVAALO!!!"
+        );
         connection.playMusic();
       } else {
-        await connection.addToQueue(interaction, "cavalo.mp3", true);
+        await connection.addToQueue(
+          interaction,
+          "cavalo.mp3",
+          true,
+          "CAVAALO!!!"
+        );
       }
     } else {
       connection = new Music(client, interaction);
 
-      await connection.addToQueue(interaction, "cavalo.mp3", true);
+      await connection.addToQueue(
+        interaction,
+        "cavalo.mp3",
+        true,
+        "CAVAALO!!!"
+      );
 
       connection.playMusic();
     }
