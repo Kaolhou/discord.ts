@@ -18,7 +18,7 @@ const texts: LocaleResponses = {
   },
 };
 
-export default function playlistEmbed(
+export function playlistEmbed(
   titles: string[],
   locale: LocaleString,
   author: string

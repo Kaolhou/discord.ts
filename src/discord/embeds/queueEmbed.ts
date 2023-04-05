@@ -14,10 +14,7 @@ const RESPONSES: LocaleResponses = {
   },
 };
 
-export default function queueEmbed(
-  queue: SoundOptions[],
-  locale: LocaleString
-) {
+export function queueEmbed(queue: SoundOptions[], locale: LocaleString) {
   const embed = new EmbedBuilder();
   embed.setTitle(RESPONSES.queue[locale] || RESPONSES.queue["en-US"]);
   queue.forEach((item, index) => {

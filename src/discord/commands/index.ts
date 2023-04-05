@@ -1,5 +1,6 @@
 import Command from "../classes/bases/Command";
 import cavalo from "./cavalo";
+import meme from "./meme";
 import next from "./next";
 import pause from "./pause";
 import ping from "./ping";
@@ -17,4 +18,5 @@ export default [
   unpause,
   shuffle,
   queue,
+  meme,
 ] as Command[];

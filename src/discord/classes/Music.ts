@@ -11,8 +11,7 @@ import { Main } from "./Main";
 import { CommandInteraction, GuildMember } from "discord.js";
 import path from "path";
 import { LocaleResponses } from "../../types";
-// import { musicEmbed } from "../embeds/musicEmbed";
-import playlistEmbed from "../embeds/playlistEmbed";
+import { playlistEmbed } from "../embeds";
 
 export interface SoundOptions {
   link: string;

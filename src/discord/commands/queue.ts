@@ -6,7 +6,7 @@ import {
 import Command from "../classes/bases/Command";
 import { Main } from "../classes/Main";
 import { LocaleResponses } from "../../types";
-import queueEmbed from "../embeds/queueEmbed";
+import { queueEmbed } from "../embeds";
 
 const RESPONSES: LocaleResponses = {
   noVoiceConnection: {

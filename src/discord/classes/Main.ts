@@ -5,6 +5,7 @@ import Command from "./bases/Command";
 import { Logger } from "pino";
 import { PrismaClient } from "@prisma/client";
 import Music from "./Music";
+import Keyv from "keyv";
 
 interface Options extends ClientOptions {
   logger: Logger;
@@ -15,6 +16,7 @@ export class Main extends Client {
   voiceConnections = new Collection<string, Music>();
   logger: Logger;
   prisma: PrismaClient;
+  keyv = new Keyv(process.env!.DATABASE_URL!);
 
   constructor(options: Options) {
     super(options);
