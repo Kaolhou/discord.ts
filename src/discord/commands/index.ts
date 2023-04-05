@@ -1,13 +1,13 @@
-import Command from "../classes/bases/Command";
-import cavalo from "./cavalo";
-import meme from "./meme";
-import next from "./next";
-import pause from "./pause";
-import ping from "./ping";
-import play from "./play";
-import queue from "./queue";
-import shuffle from "./shuffle";
-import unpause from "./unpause";
+import Command from "../classes/bases/Command.js";
+import cavalo from "./cavalo.js";
+import meme from "./meme.js";
+import next from "./next.js";
+import pause from "./pause.js";
+import ping from "./ping.js";
+import play from "./play.js";
+import queue from "./queue.js";
+import shuffle from "./shuffle.js";
+import unpause from "./unpause.js";
 
 export default [
   ping,

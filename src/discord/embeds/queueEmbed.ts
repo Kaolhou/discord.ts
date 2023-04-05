@@ -1,7 +1,7 @@
 import { EmbedBuilder, LocaleString } from "discord.js";
-import { SoundOptions } from "../classes/Music";
-import { LocaleResponses } from "../../types";
-import format from "../../util/format";
+import { SoundOptions } from "../classes/Music.js";
+import { LocaleResponses } from "../../types.js";
+import format from "../../util/format.js";
 
 const RESPONSES: LocaleResponses = {
   noVoiceConnection: {

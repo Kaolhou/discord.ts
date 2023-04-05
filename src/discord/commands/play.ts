@@ -3,9 +3,9 @@ import {
   CacheType,
   SlashCommandBuilder,
 } from "discord.js";
-import Command from "../classes/bases/Command";
-import { Main } from "../classes/Main";
-import Music from "../classes/Music";
+import Command from "../classes/bases/Command.js";
+import { Main } from "../classes/Main.js";
+import Music from "../classes/Music.js";
 
 class Play extends Command {
   public async executar(

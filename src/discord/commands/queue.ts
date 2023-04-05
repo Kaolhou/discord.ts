@@ -3,10 +3,10 @@ import {
   CacheType,
   SlashCommandBuilder,
 } from "discord.js";
-import Command from "../classes/bases/Command";
-import { Main } from "../classes/Main";
-import { LocaleResponses } from "../../types";
-import { queueEmbed } from "../embeds";
+import Command from "../classes/bases/Command.js";
+import { Main } from "../classes/Main.js";
+import { LocaleResponses } from "../../types.js";
+import { queueEmbed } from "../embeds/index.js";
 
 const RESPONSES: LocaleResponses = {
   noVoiceConnection: {

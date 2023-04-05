@@ -1,3 +1,3 @@
-export { queueEmbed } from "./queueEmbed";
-export { playlistEmbed } from "./playlistEmbed";
-export { musicEmbed } from "./musicEmbed";
+export { queueEmbed } from "./queueEmbed.js";
+export { playlistEmbed } from "./playlistEmbed.js";
+export { musicEmbed } from "./musicEmbed.js";

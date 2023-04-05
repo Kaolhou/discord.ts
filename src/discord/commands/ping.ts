@@ -3,8 +3,8 @@ import {
   CacheType,
   SlashCommandBuilder,
 } from "discord.js";
-import Command from "../classes/bases/Command";
-import { Main } from "../classes/Main";
+import Command from "../classes/bases/Command.js";
+import { Main } from "../classes/Main.js";
 
 class Ping extends Command {
   public async executar(

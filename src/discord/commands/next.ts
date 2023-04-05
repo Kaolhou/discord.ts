@@ -3,9 +3,9 @@ import {
   CacheType,
   SlashCommandBuilder,
 } from "discord.js";
-import Command from "../classes/bases/Command";
-import { Main } from "../classes/Main";
-import { LocaleResponses } from "../../types";
+import Command from "../classes/bases/Command.js";
+import { Main } from "../classes/Main.js";
+import { LocaleResponses } from "../../types.js";
 
 const RESPONSES: LocaleResponses = {
   noVoiceConnection: {

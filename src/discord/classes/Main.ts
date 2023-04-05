@@ -1,10 +1,10 @@
 import { Client, Collection } from "discord.js";
 import type { ClientOptions } from "discord.js";
-import events from "../events";
-import Command from "./bases/Command";
+import events from "../events/index.js";
+import Command from "./bases/Command.js";
 import { Logger } from "pino";
 import { PrismaClient } from "@prisma/client";
-import Music from "./Music";
+import Music from "./Music.js";
 import Keyv from "keyv";
 
 interface Options extends ClientOptions {

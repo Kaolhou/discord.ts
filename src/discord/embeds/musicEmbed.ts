@@ -1,7 +1,7 @@
 import { EmbedBuilder, LocaleString } from "discord.js";
 import { YouTubeVideo } from "play-dl";
-import { LocaleResponses } from "../../types";
-import format from "../../util/format";
+import { LocaleResponses } from "../../types.js";
+import format from "../../util/format.js";
 
 const texts: LocaleResponses = {
   noDescription: {

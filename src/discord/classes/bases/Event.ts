@@ -1,4 +1,4 @@
-import { Main } from "../Main";
+import { Main } from "../Main.js";
 import type { ClientEvents } from "discord.js";
 
 export default class Event<T extends keyof ClientEvents> {

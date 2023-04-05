@@ -7,11 +7,11 @@ import {
   joinVoiceChannel,
   createAudioResource,
 } from "@discordjs/voice";
-import { Main } from "./Main";
+import { Main } from "./Main.js";
 import { CommandInteraction, GuildMember } from "discord.js";
 import path from "path";
-import { LocaleResponses } from "../../types";
-import { playlistEmbed } from "../embeds";
+import { LocaleResponses } from "../../types.js";
+import { playlistEmbed } from "../embeds/index.js";
 
 export interface SoundOptions {
   link: string;

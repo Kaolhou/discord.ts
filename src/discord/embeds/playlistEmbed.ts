@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "@discordjs/builders";
-import { LocaleResponses } from "../../types";
+import { LocaleResponses } from "../../types.js";
 import { LocaleString } from "discord.js";
-import format from "../../util/format";
+import format from "../../util/format.js";
 
 const texts: LocaleResponses = {
   addedToQueue: {

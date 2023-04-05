@@ -3,9 +3,9 @@ import {
   CacheType,
   SlashCommandBuilder,
 } from "discord.js";
-import Command from "../classes/bases/Command";
-import { Main } from "../classes/Main";
-import Ifunny, { meme } from "../classes/Ifunny";
+import Command from "../classes/bases/Command.js";
+import { Main } from "../classes/Main.js";
+import Ifunny, { meme } from "../classes/Ifunny.js";
 import axios from "axios";
 
 class Meme extends Command {

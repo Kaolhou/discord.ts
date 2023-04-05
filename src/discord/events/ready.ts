@@ -1,8 +1,10 @@
 import { REST, Routes } from "discord.js";
-import commands from "../commands";
-import Command from "../classes/bases/Command";
-import Event from "../classes/bases/Event";
-import { Main } from "../classes/Main";
+import commands from "../commands/index.js";
+import Command from "../classes/bases/Command.js";
+import Event from "../classes/bases/Event.js";
+import { Main } from "../classes/Main.js";
+import fs from "fs";
+import { resolve } from "path";
 // import { Main } from "../structures/Main";
 
 class Ready extends Event<"ready"> {
@@ -13,14 +15,27 @@ class Ready extends Event<"ready"> {
     const rest = new REST({ version: "9" }).setToken(process!.env!.TOKEN!);
     commands.forEach((command) => {
       client.commands.set(command.data.name, command);
+      if (
+        fs
+          .readFileSync(resolve(process.cwd(), ".commandignore"))
+          .toString()
+          .split("\n")
+          .includes(command.data.name)
+      ) {
+        client.logger.info(
+          "\x1b[33m%s\x1b[0m",
+          `[commands] ${command.data.name} ignored`
+        );
+      } else {
+        client.logger.info(
+          "\x1b[33m%s\x1b[0m",
+          `[commands] ${command.data.name} loaded`
+        );
+      }
       imports.push(command);
     });
     imports.map((i) => {
       commandArr.push(i.data.toJSON());
-      client.logger.info(
-        "\x1b[33m%s\x1b[0m",
-        `[commands] ${i.data.name} loaded`
-      );
     });
 
     rest

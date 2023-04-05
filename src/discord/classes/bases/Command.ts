@@ -1,4 +1,4 @@
-import { Main } from "../Main";
+import { Main } from "../Main.js";
 import type {
   ChatInputCommandInteraction,
   PermissionResolvable,

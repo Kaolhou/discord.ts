@@ -1,6 +1,6 @@
 import { Interaction, CacheType } from "discord.js";
-import Event from "../classes/bases/Event";
-import { Main } from "../classes/Main";
+import Event from "../classes/bases/Event.js";
+import { Main } from "../classes/Main.js";
 
 class InteractionCreate extends Event<"interactionCreate"> {
   public async executar(

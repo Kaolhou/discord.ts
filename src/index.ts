@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { Main } from "./discord/classes/Main";
-import logger from "./util/logger";
-import prisma from "./util/prisma";
+import { Main } from "./discord/classes/Main.js";
+import logger from "./util/logger.js";
+import prisma from "./util/prisma.js";
 
 new Main({
   intents: [
