@@ -22,7 +22,7 @@ class Ready extends Event<"ready"> {
           .includes(command.data.name)
       ) {
         client.logger.info(
-          "\x1b[33m%s\x1b[0m",
+          "\x1b[31m%s\x1b[0m",
           `[commands] ${command.data.name} ignored`
         );
       } else {
@@ -30,8 +30,8 @@ class Ready extends Event<"ready"> {
           "\x1b[33m%s\x1b[0m",
           `[commands] ${command.data.name} loaded`
         );
+        imports.push(command);
       }
-      imports.push(command);
     });
     imports.map((i) => {
       commandArr.push(i.data.toJSON());
