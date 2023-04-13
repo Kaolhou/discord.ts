@@ -1,5 +1,6 @@
 import Command from "../classes/bases/Command.js";
 import cavalo from "./cavalo.js";
+import loop from "./loop.js";
 import meme from "./meme.js";
 import next from "./next.js";
 import pause from "./pause.js";
@@ -19,4 +20,5 @@ export default [
   shuffle,
   queue,
   meme,
+  loop,
 ] as Command[];

@@ -1,4 +1,4 @@
-import { stream, validate, playlist_info } from "play-dl";
+import { stream, validate, playlist_info, video_basic_info } from "play-dl";
 import {
   createAudioPlayer,
   AudioPlayerStatus,
@@ -8,10 +8,10 @@ import {
   createAudioResource,
 } from "@discordjs/voice";
 import { Main } from "./Main.js";
-import { CommandInteraction, GuildMember } from "discord.js";
+import { CommandInteraction, GuildMember, LocaleString } from "discord.js";
 import path from "path";
 import { LocaleResponses } from "../../types.js";
-import { playlistEmbed } from "../embeds/index.js";
+import { musicEmbed, playlistEmbed } from "../embeds/index.js";
 
 export interface SoundOptions {
   link: string;
@@ -21,10 +21,6 @@ export interface SoundOptions {
 }
 
 const RESPONSES: LocaleResponses = {
-  unconnectedUser: {
-    "pt-BR": "Você precisa estar conectado em um canal de voz",
-    "en-US": "You must be connected in a voice channel",
-  },
   unjoinableChannel: {
     "pt-BR": "Canal de voz inacessível",
     "en-US": "Unreachable voice channel",
@@ -46,6 +42,14 @@ const RESPONSES: LocaleResponses = {
     "en-US": "{0} Videos added to queue",
     "pt-BR": "{0} Vídeos adicionados à fila",
   },
+  disconnectedDueAfk: {
+    "en-US": "Disconnected due inactivity",
+    "pt-BR": "Desconectado por inatividade",
+  },
+  addedToQueue: {
+    "en-US": "Music added to queue",
+    "pt-BR": "Música adicionada à fila",
+  },
 };
 
 export type loopToggle = "one" | "all" | "off";
@@ -58,6 +62,8 @@ export default class Music {
   public connection: VoiceConnection | undefined;
   public channel = "";
   public isPlaying = false;
+  private timeout: ReturnType<typeof setTimeout> | null;
+  locale: LocaleString;
   guild;
   client;
   guildId;
@@ -66,8 +72,13 @@ export default class Music {
     this.guild = client.guilds.cache.get(interaction.guildId!);
     this.guildId = interaction.guildId;
     this.channel = interaction.channelId;
+    this.locale = interaction.locale;
     this.connect(interaction);
-    this.loadEvents();
+    this.timeout = this.initTimeout();
+  }
+
+  disconnect() {
+    this.connection?.disconnect();
   }
 
   async addToQueue(
@@ -103,10 +114,10 @@ export default class Music {
 
         videos.forEach((i) => {
           this.queue.push({
-            isLocal,
+            title: i.title!,
             link: i.url,
             requestedUserId: interaction.user.id,
-            title: i.title!,
+            isLocal,
           });
         });
 
@@ -120,15 +131,18 @@ export default class Music {
           ],
         });
       } else if (valid === "yt_video") {
+        const { video_details } = await video_basic_info(link);
         this.queue.push({
-          isLocal,
+          title: link,
           link,
           requestedUserId: interaction.user.id,
-          title: link,
+          isLocal,
         });
         interaction.editReply({
           content:
-            RESPONSES.queue[interaction.locale] || RESPONSES.queue["en-US"],
+            RESPONSES.addedToQueue[interaction.locale] ||
+            RESPONSES.addedToQueue["en-US"],
+          embeds: [musicEmbed(interaction.locale, video_details)],
         });
       } else {
         await interaction.editReply(
@@ -141,23 +155,42 @@ export default class Music {
   }
 
   async next() {
+    //todo arrumar função next, quando loopStatus está em all, não funciona como deveria
     this.player.stop();
     this.isPlaying = false;
-    this.queue.shift();
+    if (!(this.loopStatus == "all")) {
+      this.queue.shift();
+    }
     await this.playMusic();
+    return this.queue[0];
   }
 
   pause() {
-    this.player.pause();
-    this.isPlaying = false;
+    if (this.player.state.status == AudioPlayerStatus.Playing) {
+      this.player.pause();
+      this.timeout = this.initTimeout();
+      this.isPlaying = false;
+      return true;
+    }
+    return false;
   }
 
   unpause() {
-    this.player.unpause();
-    this.isPlaying = true;
+    const status = this.player.state.status;
+    if (
+      status == AudioPlayerStatus.Paused ||
+      status == AudioPlayerStatus.AutoPaused
+    ) {
+      this.player.unpause();
+      clearTimeout(this.timeout || undefined);
+      this.isPlaying = true;
+      return true;
+    }
+    return false;
   }
 
   public async playMusic() {
+    clearTimeout(this.timeout || undefined);
     const current_item = this.queue[0];
 
     if (current_item.isLocal) {
@@ -192,6 +225,7 @@ export default class Music {
         this.client.logger.info(
           `Voice connection created at ${interaction.guildId}`
         );
+        this.loadEvents();
       } else {
         interaction.editReply(
           RESPONSES.unjoinableChannel[interaction.locale] ||
@@ -199,24 +233,36 @@ export default class Music {
         );
       }
     } else {
-      interaction.editReply(
-        RESPONSES.unconnectedUser[interaction.locale] ||
-          RESPONSES.unconnectedUser["en-US"]
-      );
+      return;
     }
   }
 
-  private isUserConnected(member: GuildMember | undefined) {
+  public isUserConnected(member: GuildMember | undefined) {
     return !!member?.voice.channel?.id;
+  }
+
+  private initTimeout() {
+    return setTimeout(async () => {
+      const channel = this.client.channels.cache.get(this.channel);
+      this.disconnect();
+      channel?.isTextBased() &&
+        (await channel?.send(
+          RESPONSES.disconnectedDueAfk[this.locale] ||
+            RESPONSES.disconnectedDueAfk["en-US"]
+        ));
+    }, 5 * 60 * 1000);
   }
 
   private loadEvents() {
     this.connection!.on(VoiceConnectionStatus.Disconnected, () => {
+      this.client.logger.info("Disconnected at " + this.guildId);
       this.player.stop();
       this.queue.slice(0, 0);
       this.client.voiceConnections.delete(this.guildId!);
+      this.client.voiceConnections.get(this.guildId!);
     });
     this.player.on(AudioPlayerStatus.Idle, () => {
+      this.timeout = this.initTimeout();
       switch (this.loopStatus) {
         case "off":
           this.queue.shift();

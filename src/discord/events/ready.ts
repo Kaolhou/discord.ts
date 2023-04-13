@@ -5,7 +5,6 @@ import Event from "../classes/bases/Event.js";
 import { Main } from "../classes/Main.js";
 import fs from "fs";
 import { resolve } from "path";
-// import { Main } from "../structures/Main";
 
 class Ready extends Event<"ready"> {
   public once = true;

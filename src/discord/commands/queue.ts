@@ -41,6 +41,7 @@ class Queue extends Command {
 export default new Queue(
   new SlashCommandBuilder()
     .setName("queue")
+    .setNameLocalization("pt-BR", "fila")
     .setDescription("Show the music queue")
     .setDescriptionLocalization("pt-BR", "Mostra a fila de músicas")
 );

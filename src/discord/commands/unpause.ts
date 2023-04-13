@@ -16,6 +16,10 @@ const RESPONSES: LocaleResponses = {
     "en-US": "Song Paused",
     "pt-BR": "Música Pausada",
   },
+  unsuccessUnpause: {
+    "en-US": "Music not continued",
+    "pt-BR": "Música não continuada",
+  },
 };
 
 class Unpause extends Command {
@@ -25,11 +29,18 @@ class Unpause extends Command {
   ): Promise<void> {
     const connection = client.voiceConnections.get(interaction.guildId!);
     if (connection) {
-      connection.unpause();
-      interaction.editReply(
-        RESPONSES.songUnpaused[interaction.locale] ||
-          RESPONSES.songUnpaused["en-US"]
-      );
+      const success = connection.unpause();
+      if (success) {
+        interaction.editReply(
+          RESPONSES.songUnpaused[interaction.locale] ||
+            RESPONSES.songUnpaused["en-US"]
+        );
+      } else {
+        interaction.editReply(
+          RESPONSES.unsuccessUnpause[interaction.locale] ||
+            RESPONSES.unsuccessUnpause["en-US"]
+        );
+      }
     } else {
       interaction.editReply(
         RESPONSES.noVoiceConnection[interaction.locale] ||

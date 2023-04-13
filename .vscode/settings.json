@@ -4,6 +4,7 @@
     "material-icon-theme.folders.associations": {
         "media":"images"
     },
+    "eslint.enable": true,
     "material-icon-theme.files.associations": {
         ".commandignore":"command"
     }
