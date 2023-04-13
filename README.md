@@ -35,4 +35,7 @@ Se você usa o editor de texto [Visual Studio Code](https://code.visualstudio.co
 
 ## **Avisos**
 
-> - Foi escolhido o pacote node-fetch na versão 2.6.6 pois a partir da 3.x não é mais aceito `require()` [verifique melhor aqui](https://stackoverflow.com/questions/69081410/error-err-require-esm-require-of-es-module-not-supported)
+> - Esse projeto utiliza EcmaScript Modules em desenvolvimento e em produção devido a erros causados por pacotes npm que bloqueavam CommonJs
+> - O banco de dados possui apenas uma model básica para evitar de dar erros, por enquanto não está em uso, porém já está configurado para que quando for usar, já esteja pronto
+> - `.commandignore` é um arquivo especial que permite ignorar comandos específicos seja por erro, ou por qualquer outro motivo, basta digitar o `commandName` do slash command, o separador é uma quebra de linha, quando a aplicação for reiniciada, o comando será percebido porém entrará em desuso.
+> - Formatação de código é seguida por prettier e eslint, caso não esteja seguindo as normas, husky irá bloquear um commit
