@@ -9,6 +9,7 @@ import play from "./play.js";
 import queue from "./queue.js";
 import shuffle from "./shuffle.js";
 import unpause from "./unpause.js";
+import waifu from "./waifu.js";
 
 export default [
   ping,
@@ -21,4 +22,5 @@ export default [
   queue,
   meme,
   loop,
+  waifu,
 ] as Command[];

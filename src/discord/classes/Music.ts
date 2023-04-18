@@ -58,7 +58,7 @@ export default class Music {
   public queue: SoundOptions[] = [];
   private player = createAudioPlayer();
   public loopStatus: loopToggle = "off";
-  private mediaFolder = path.resolve(process.cwd(), "src", "media", "audios");
+  private mediaFolder = path.resolve(process.cwd(), "audios");
   public connection: VoiceConnection | undefined;
   public channel = "";
   public isPlaying = false;

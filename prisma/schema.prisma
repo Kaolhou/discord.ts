@@ -10,8 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Guilds {
+  id               String  @id @unique
+  dailyMeme        Boolean
+  dailyMemeChannel Int?
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id              String       @id
+  email           String?      @unique
+  name            String?
+  Waifus          UserWaifus[]
+  waifusGenerated Int
+  waifusThisWeek  Int
+  lastWaifu       DateTime
+  isSubscriber    Boolean
+}
+
+model UserWaifus {
+  waifu   Waifu @relation(fields: [waifuId], references: [id])
+  waifuId Int   @unique
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  @@id([waifuId, userId])
+}
+
+model Waifu {
+  id      Int    @id @unique
+  imgUrl  String
+  textUrl String
+
+  users UserWaifus[]
 }
