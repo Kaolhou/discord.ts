@@ -24,5 +24,6 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "no-console": "error",
     "no-useless-escape": "error",
+    "no-unreachable": "error",
   },
 };

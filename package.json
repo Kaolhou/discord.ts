@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node build/index.js",
     "dev": "nodemon src/index.ts",
+    "auth": "node authorization.js",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint src/**/**.ts",
     "lint:prettier": "prettier --c \"src/**/*.ts\"",
@@ -61,3 +62,4 @@
     "play-dl": "^1.9.6"
   }
 }
+

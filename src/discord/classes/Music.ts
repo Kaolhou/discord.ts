@@ -1,4 +1,13 @@
-import { stream, validate, playlist_info, video_basic_info } from "play-dl";
+import play, {
+  stream,
+  validate,
+  playlist_info,
+  video_basic_info,
+  spotify,
+  search,
+  SpotifyPlaylist,
+  SpotifyTrack,
+} from "play-dl";
 import {
   createAudioPlayer,
   AudioPlayerStatus,
@@ -49,6 +58,10 @@ const RESPONSES: LocaleResponses = {
   addedToQueue: {
     "en-US": "Music added to queue",
     "pt-BR": "Música adicionada à fila",
+  },
+  playlistUpper100: {
+    "en-US": "Playlist cannot have more than 100 items",
+    "pt-BR": "Playlist não pode ter mais de 100 items",
   },
 };
 
@@ -144,6 +157,45 @@ export default class Music {
             RESPONSES.addedToQueue["en-US"],
           embeds: [musicEmbed(interaction.locale, video_details)],
         });
+      } else if (valid === "sp_track") {
+        const searched = await this.playYTfromSP(link, interaction);
+        interaction.editReply({
+          content:
+            RESPONSES.addedToQueue[interaction.locale] ||
+            RESPONSES.addedToQueue["en-US"],
+          embeds: [musicEmbed(interaction.locale, searched)],
+        });
+      } else if (valid === "sp_playlist") {
+        const data = (await spotify(link)) as SpotifyPlaylist;
+        if (data.total_tracks < 100) {
+          const tracks = await data.all_tracks();
+          const yt_videos = await Promise.all(
+            tracks.map((track) => this.playYTfromSP(track.url, interaction))
+          );
+          yt_videos.forEach((i) => {
+            this.queue.push({
+              title: i.title!,
+              link: i.url,
+              requestedUserId: interaction.user.id,
+              isLocal,
+            });
+          });
+          await interaction.editReply({
+            embeds: [
+              playlistEmbed(
+                yt_videos.map((i) => i.title!),
+                interaction.locale,
+                interaction.user.id
+              ),
+            ],
+          });
+        } else {
+          await interaction.editReply(
+            RESPONSES.playlistUpper100[interaction.locale] ||
+              RESPONSES.playlistUpper100["en-US"]
+          );
+          return;
+        }
       } else {
         await interaction.editReply(
           RESPONSES.invalidVideoType[interaction.locale] ||
@@ -175,6 +227,20 @@ export default class Music {
     return false;
   }
 
+  async playYTfromSP(music: string, interaction: CommandInteraction) {
+    const data = (await spotify(music)) as SpotifyTrack;
+    const [searched] = await search(`${data.name} ${data.artists[0].name}`, {
+      limit: 1,
+    });
+    this.queue.push({
+      title: searched.title!,
+      link: searched.url,
+      requestedUserId: interaction.user.id,
+      isLocal: false,
+    });
+    return searched;
+  }
+
   unpause() {
     const status = this.player.state.status;
     if (
@@ -190,24 +256,29 @@ export default class Music {
   }
 
   public async playMusic() {
-    clearTimeout(this.timeout || undefined);
     const current_item = this.queue[0];
-
-    if (current_item.isLocal) {
-      this.player.play(
-        createAudioResource(path.resolve(this.mediaFolder, current_item.link))
-      );
-    } else {
-      const video = await stream(current_item.link);
-      this.player.play(
-        createAudioResource(video.stream, {
-          inputType: video.type,
-        })
-      );
+    if (play.is_expired()) {
+      await play.refreshToken(); // This will check if access token has expired or not. If yes, then refresh the token.
     }
+    if (current_item) {
+      clearTimeout(this.timeout || undefined);
 
-    this.connection?.subscribe(this.player);
-    this.isPlaying = true;
+      if (current_item.isLocal) {
+        this.player.play(
+          createAudioResource(path.resolve(this.mediaFolder, current_item.link))
+        );
+      } else {
+        const video = await stream(current_item.link);
+        this.player.play(
+          createAudioResource(video.stream, {
+            inputType: video.type,
+          })
+        );
+      }
+
+      this.connection?.subscribe(this.player);
+      this.isPlaying = true;
+    }
   }
 
   // isConnected() {}
@@ -273,6 +344,7 @@ export default class Music {
         case "one":
           break;
       }
+      this.playMusic();
     });
   }
 }
