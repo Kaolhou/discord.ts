@@ -1,0 +1,6 @@
+*.env
+cjs
+esm
+!.env.example
+node_modules
+build
