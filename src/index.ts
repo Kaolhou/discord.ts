@@ -22,4 +22,5 @@ new Main({
   logger: new Logger(),
   prisma: new PrismaClient(),
   memesPath: process.env.MEMES_PATH,
+  debug: process.argv.includes("-Debug"),
 }).initialize(process.env.TOKEN);
