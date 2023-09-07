@@ -44,7 +44,7 @@ export default class Main extends Client implements MainI {
       if (i.endsWith(".jfif")) {
         fs.renameSync(
           path.resolve(this.memesPath, i),
-          path.resolve(this.memesPath, i.slice(0, -5) + "jpeg")
+          path.resolve(this.memesPath, i.slice(0, -4) + ".jpeg")
         );
         this.logger.info("[main] all jfif converted");
       }
