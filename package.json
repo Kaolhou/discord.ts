@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
     "dev": "nodemon --exec node -r @swc-node/register src/index.ts"
   },
   "keywords": [],

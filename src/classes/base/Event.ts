@@ -1,5 +1,5 @@
 import type { ClientEvents } from "discord.js";
-import Main from "../Main.ts";
+import Main from "../Main";
 
 export default class Event<T extends keyof ClientEvents> {
   public once: boolean;

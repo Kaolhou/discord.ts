@@ -2,12 +2,17 @@ import {
   ChatInputCommandInteraction,
   PermissionResolvable,
   SlashCommandBuilder,
+  SlashCommandSubcommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 import Main from "../Main";
 
 export default abstract class Command {
   constructor(
-    public data: SlashCommandBuilder,
+    public data:
+      | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
+      | SlashCommandSubcommandBuilder
+      | SlashCommandSubcommandsOnlyBuilder,
     public perms?: PermissionResolvable[]
   ) {}
   async execute(

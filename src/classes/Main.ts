@@ -1,8 +1,8 @@
 import { Client, ClientOptions, Collection } from "discord.js";
 import events from "../events/index.ts";
-import Logger from "./Logger.ts";
+import Logger from "./Logger";
 import { PrismaClient } from "@prisma/client";
-import Command from "./base/Command.ts";
+import Command from "./base/Command";
 import path from "path";
 import fs from "fs";
 
@@ -41,20 +41,22 @@ export default class Main extends Client implements MainI {
     const files = fs.readdirSync(pathMeme);
 
     files.forEach((i) => {
+      let count = 0;
       if (i.endsWith(".jfif")) {
+        count++;
         fs.renameSync(
           path.resolve(this.memesPath, i),
           path.resolve(this.memesPath, i.slice(0, -4) + ".jpeg")
         );
-        this.logger.info("[main] all jfif converted");
       }
+      if (count != 0) this.logger.info(`[main] ${count} jfifs converted`);
     });
 
-    const memes = await this.prisma.meme.createMany({
+    var memes = await this.prisma.meme.createMany({
       data: files.map((i) => ({ dailyPublished: false, nome: i, nsfw: false })),
       skipDuplicates: true,
     });
-    this.logger.info(`rows: ${memes.count} affected`);
+    this.logger.info(`rows: ${memes.count} added`);
 
     const data = await this.prisma.meme.findMany();
 
@@ -62,13 +64,14 @@ export default class Main extends Client implements MainI {
       .filter((i) => !files.find((j) => j == i.nome))
       .map((i) => i.nome);
 
-    this.prisma.meme.deleteMany({
+    memes = await this.prisma.meme.deleteMany({
       where: {
         nome: {
           in: toDelete,
         },
       },
     });
+    this.logger.info(`rows: ${memes.count} deleted`);
 
     this.logger.info("\x1b[33mAll memes up to date\x1b[0m");
   }

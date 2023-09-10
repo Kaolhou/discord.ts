@@ -19,5 +19,19 @@ model Meme{
 model Guild{
   guildId           String  @id
   dailyMemeChannel  String? @unique
+  logChannel        String? @unique
+
+  guildConfig       GuildConfig?
+
+}
+
+model GuildConfig{
+  id    String  @id @default(uuid())
+  guildId String @unique
+  guild Guild @relation(fields: [guildId], references: [guildId])
+
+  //logs
+  sendBuldDelete  Boolean
+  sendDelete      Boolean
 
 }

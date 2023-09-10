@@ -1,6 +1,6 @@
-import { REST, Routes } from "discord.js";
-import Main from "../classes/Main.ts";
-import Event from "../classes/base/Event.ts";
+import { Message, REST, Routes } from "discord.js";
+import Main from "../classes/Main";
+import Event from "../classes/base/Event";
 import { commands } from "../commands/index.ts";
 
 class Ready extends Event<"ready"> {
@@ -18,6 +18,19 @@ class Ready extends Event<"ready"> {
     rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
       body: jsonCommands,
     });
+
+    await client.prisma.guild
+      .createMany({
+        data: client.guilds.cache.map((val) => {
+          return {
+            guildId: val.id,
+          };
+        }),
+        skipDuplicates: true,
+      })
+      .then((rows) =>
+        client.logger.info(`created ${rows.count} without guildCreate event`)
+      );
 
     client.logger.info("[ready] - bot started");
   }
