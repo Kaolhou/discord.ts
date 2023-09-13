@@ -1,10 +1,7 @@
 import Logger from "./classes/Logger";
 import Main from "./classes/Main";
-import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { Partials } from "discord.js";
-
-config();
 
 new Main({
   intents: [

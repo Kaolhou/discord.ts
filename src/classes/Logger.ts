@@ -1,25 +1,60 @@
-import { pino } from "pino";
+// import { pino } from "pino";
 
 export default class Logger {
-  private logger = pino({
-    transport: {
-      target: "pino-pretty",
-    },
-  });
+  public dateTime() {
+    return new Date().toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+  success(data: any) {
+    console.info(
+      "[%s] \x1b[36m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[success]",
+      data
+    );
+  }
 
   info(data: any) {
-    this.logger.info(data);
+    console.info(
+      "[%s] \x1b[36m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[info]",
+      data
+    );
   }
   debug(data: any) {
-    this.logger.debug(data);
+    console.debug(
+      "[%s] \x1b[33m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[debug]",
+      data
+    );
   }
   error(data: any) {
-    this.logger.error(data);
+    console.error(
+      "[%s] \x1b[31m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[error]",
+      data
+    );
   }
   fatal(data: any) {
-    this.logger.fatal(data);
+    console.error(
+      "[%s] \x1b[31m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[fatal]",
+      data
+    );
   }
   warn(data: any) {
-    this.logger.warn(data);
+    console.warn(
+      "[%s] \x1b[33m%s\x1b[0m - %s",
+      this.dateTime(),
+      "[warn]",
+      data
+    );
   }
 }

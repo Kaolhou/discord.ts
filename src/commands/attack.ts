@@ -28,8 +28,11 @@ class Attack extends Command {
   ): Promise<void> {
     const target = interaction.options.getUser("person");
     const embed = new EmbedBuilder()
-      .setTitle(`<@${interaction.user.id}> atacou <@${target?.id}>`)
-      .setImage(this.externalGifs.sort(() => Math.random() * 0.5)[0]);
+      .setDescription(
+        `${interaction.user.toString()} atacou ${target?.toString()}`
+      )
+      .setImage(this.externalGifs.sort(() => 0.5 - Math.random())[0])
+      .setColor("Red");
 
     await interaction.editReply({
       embeds: [embed],
