@@ -10,28 +10,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Meme{
-  nome            String  @id
-  nsfw            Boolean
-  dailyPublished  Boolean
+model Meme {
+  nome           String  @id
+  nsfw           Boolean
+  dailyPublished Boolean
 }
 
-model Guild{
-  guildId           String  @id
-  dailyMemeChannel  String? @unique
-  logChannel        String? @unique
+model GuildUserMember {
+  guild     Guild    @relation(fields: [guildId], references: [guildId])
+  guildId   String
+  user      User     @relation(fields: [userId], references: [userId])
+  userId    String
+  createdAt DateTime @default(now())
 
-  guildConfig       GuildConfig?
-
+  @@id([guildId, userId])
 }
 
-model GuildConfig{
-  id    String  @id @default(uuid())
+model Guild {
+  guildId          String  @id
+  dailyMemeChannel String? @unique
+  logChannel       String? @unique
+
+  guildConfig     GuildConfig?
+  GuildUserMember GuildUserMember[]
+}
+
+model User {
+  userId String @id
+
+  messages BigInt @default(0)
+  unoWons  Int    @default(0)
+
+  GuildUserMember GuildUserMember[]
+}
+
+model GuildConfig {
+  id      String @id @default(uuid())
   guildId String @unique
-  guild Guild @relation(fields: [guildId], references: [guildId])
+  guild   Guild  @relation(fields: [guildId], references: [guildId])
 
   //logs
-  sendBuldDelete  Boolean
-  sendDelete      Boolean
-
+  sendBulkDelete Boolean
+  sendDelete     Boolean
 }

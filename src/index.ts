@@ -16,11 +16,12 @@ new Main({
     "AutoModerationConfiguration",
     "AutoModerationExecution",
     "GuildMessageReactions",
+    'Guilds'
   ],
 
   partials: [Partials.Message, Partials.User, Partials.Channel],
-  logger: new Logger(),
+  logger: new Logger(process.argv.includes("-debug")),
   prisma: new PrismaClient(),
   memesPath: process.env.MEMES_PATH,
-  debug: process.argv.includes("-Debug"),
+  debug: process.argv.includes('--discord-debug')
 }).initialize(process.env.TOKEN);

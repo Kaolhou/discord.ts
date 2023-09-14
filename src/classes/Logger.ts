@@ -1,6 +1,10 @@
 // import { pino } from "pino";
 
 export default class Logger {
+  public enableDebug
+  constructor(debug:boolean){
+    this.enableDebug = debug
+  }
   public dateTime() {
     return new Date().toLocaleTimeString("pt-BR", {
       hour: "2-digit",
@@ -10,9 +14,9 @@ export default class Logger {
   }
   success(data: any) {
     console.info(
-      "[%s] \x1b[36m%s\x1b[0m - %s",
+      "[%s] \x1b[32m%s\x1b[0m - %s",
       this.dateTime(),
-      "[success]",
+      "[OK]",
       data
     );
   }
@@ -26,12 +30,14 @@ export default class Logger {
     );
   }
   debug(data: any) {
-    console.debug(
-      "[%s] \x1b[33m%s\x1b[0m - %s",
-      this.dateTime(),
-      "[debug]",
-      data
-    );
+    if(this.enableDebug){
+      console.debug(
+        "[%s] \x1b[33m%s\x1b[0m - %s",
+        this.dateTime(),
+        "[debug]",
+        data
+      );
+    }
   }
   error(data: any) {
     console.error(

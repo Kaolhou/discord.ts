@@ -1,4 +1,5 @@
 import { Client, ClientOptions, Collection } from "discord.js";
+import Uno from './Uno.ts'
 import events from "../events/index.ts";
 import Logger from "./Logger";
 import { PrismaClient } from "@prisma/client";
@@ -24,6 +25,7 @@ interface Options extends ClientOptions {
 export default class Main extends Client implements MainI {
   private memesPath;
   public commands = new Collection<string, Command>();
+  public guildsUno = new Collection<string,Uno>();
   public debug;
 
   logger: Logger;
@@ -82,6 +84,7 @@ export default class Main extends Client implements MainI {
       else this.on(event.eventName, event.exe.bind(null, this));
       this.logger.info(`[main] event: ${event.eventName} successfully loaded`);
     }
+    this.logger.success('[main] all events loaded')
   }
 
   initialize(token: string) {

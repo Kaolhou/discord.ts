@@ -2,6 +2,7 @@ import {
   ChatInputCommandInteraction,
   CacheType,
   SlashCommandBuilder,
+  PermissionResolvable,
 } from "discord.js";
 import Main from "../classes/Main";
 import Command from "../classes/base/Command";
@@ -15,8 +16,9 @@ class Meme extends Command {
     const random_meme = path.resolve(
       process.env.MEMES_PATH,
       (await client.prisma.meme.findMany()).sort(() => 0.5 - Math.random())[0]
-        .nome
-    );
+      .nome
+      );
+      client.logger.debug(random_meme)
     await interaction.editReply({
       files: [random_meme],
     });
@@ -24,5 +26,6 @@ class Meme extends Command {
 }
 
 export default new Meme(
-  new SlashCommandBuilder().setName("meme").setDescription("envia um meme")
+  new SlashCommandBuilder().setName("meme").setDescription("envia um meme"),
+  ['UseApplicationCommands'] as PermissionResolvable[]
 );
