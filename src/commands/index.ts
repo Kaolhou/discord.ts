@@ -1,5 +1,5 @@
 import Command from "../classes/base/Command";
-import attack from "./attack.ts";
+import attack from "./attack";
 import config from "./config/index";
 import meme from "./memes/index";
 import ping from "./ping";

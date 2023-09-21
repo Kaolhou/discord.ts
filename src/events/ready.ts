@@ -1,7 +1,7 @@
 import { Message, REST, Routes } from "discord.js";
 import Main from "../classes/Main";
 import Event from "../classes/base/Event";
-import { commands } from "../commands/index.ts";
+import { commands } from "../commands/index";
 
 class Ready extends Event<"ready"> {
   public async exe(client: Main): Promise<void> {

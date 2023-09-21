@@ -1,8 +1,15 @@
-import Event from "../classes/base/Event.ts";
-import debug from "./debug.ts";
-import interactionCreate from "./interactionCreate.ts";
-import messageCreate from "./messageCreate.ts";
-import messageDelete from "./messageDelete.ts";
-import ready from "./ready.ts";
+import Event from "../classes/base/Event";
+import debug from "./debug";
+import interactionCreate from "./interactionCreate";
+import messageCreate from "./messageCreate";
+import messageDelete from "./messageDelete";
+import ready from "./ready";
 
-export default [interactionCreate, debug, messageDelete, ready,messageCreate,messageDelete] as Event<any>[];
+export default [
+  interactionCreate,
+  debug,
+  messageDelete,
+  ready,
+  messageCreate,
+  messageDelete,
+] as Event<any>[];
