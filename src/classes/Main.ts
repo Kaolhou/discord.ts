@@ -1,6 +1,6 @@
 import { Client, ClientOptions, Collection } from "discord.js";
 import Uno from "./uno/Uno.ts";
-import events from "../events/index.ts";
+import events from "../events/index";
 import Logger from "./Logger";
 import { PrismaClient } from "@prisma/client";
 import Command from "./base/Command";

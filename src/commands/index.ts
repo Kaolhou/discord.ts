@@ -1,7 +1,7 @@
 import Command from "../classes/base/Command";
 import attack from "./attack.ts";
-import config from "./config/index.ts";
-import meme from "./meme";
+import config from "./config/index";
+import meme from "./memes/index";
 import ping from "./ping";
 import termos from "./termos";
 

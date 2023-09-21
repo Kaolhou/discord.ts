@@ -32,7 +32,7 @@ class Ready extends Event<"ready"> {
         client.logger.info(`created ${rows.count} without guildCreate event`)
       );
 
-    client.logger.info("[ready] - bot started");
+    client.logger.success("[ready] - bot started");
   }
 }
 export default new Ready("ready", true);

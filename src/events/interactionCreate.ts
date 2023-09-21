@@ -3,7 +3,6 @@ import {
   CacheType,
   GuildMember,
   PermissionResolvable,
-  GuildMemberRoleManager,
 } from "discord.js";
 import Main from "../classes/Main";
 import Event from "../classes/base/Event";
@@ -22,7 +21,6 @@ class InteractionCreate extends Event<"interactionCreate"> {
         await interaction.editReply("something went wrong");
         return;
       }
-      console.debug(member.permissions.has('Administrator'))
       if (command.perms && command.perms.length > 0) {
         for (const perm in command.perms) {
           if (

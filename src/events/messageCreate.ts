@@ -17,58 +17,23 @@ class MessageCreate extends Event<'messageCreate'>{
         },
       })) 
 
-
-      client.logger.debug(userExists)
       if (!userExists) {
-        const user = await client.prisma.user.findUnique({
-          where:{
-            userId: message.author.id
-          }
-        })
-        if(!user){
-          const {userId} =await client.prisma.user.create({
+        try {
+          await client.prisma.user.create({
             data:{
-              userId:message.author.id,
-            },
-            select:{ userId:true }
-          })
-          await client.prisma.guildUserMember.create({
-            data:{
-              guildId:message.guildId,
-              userId
+              userId: message.author.id
             }
           })
-
-        }else{
+        } catch (error) {  
+        } finally{
           await client.prisma.guildUserMember.create({
             data:{
               guildId:message.guild.id,
-              userId:user.userId
+              userId:message.author.id
             }
           })
         }
 
-        // await client.prisma.user.create({
-        //   data:{
-        //     userId:message.author.id,
-        //     GuildUserMember:{
-        //       create:[
-        //         {
-        //           guild: {
-        //             connectOrCreate:{
-        //               where:{
-        //                 guildId:message.guildId,
-        //               },
-        //               create:{
-        //                 guildId:message.guildId
-        //               }
-        //             }
-        //           }
-        //         }
-        //       ]
-        //     }
-        //   }
-        // })
       }
 
       const {messages} = await client.prisma.user.update({
@@ -84,7 +49,7 @@ class MessageCreate extends Event<'messageCreate'>{
           messages:true
         }
       })
-      console.debug(messages)
+
       if(messages == 15n){
         const channel = client.channels.cache.get(message.channelId)
         channel?.isTextBased() ? await channel.send(`beleza ${message.author.toString()}, mandou 15 mensagem, chatão em menó\nsó fala, eu hein`) : null
