@@ -1,4 +1,5 @@
 {
-  "cSpell.words": ["cegueta", "Termos"],
+  "cSpell.words": ["cegueta", "Pendencies", "Termos"],
+  "editor.formatOnSave": true,
   "editor.tabSize": 2
 }

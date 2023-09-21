@@ -52,8 +52,7 @@ export type cards =
   | "blockg"
   | "reveg"
   | "color"
-  | "color4"
-  | "00";
+  | "color4";
 
 export type color = "red" | "blue" | "green" | "yellow" | "black";
 export type unoSymbol =
@@ -71,5 +70,4 @@ export type unoSymbol =
   | "reve"
   | "block"
   | "color"
-  | "00"
   | "color4";

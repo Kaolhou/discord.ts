@@ -1,0 +1,32 @@
+{
+	"Command": {
+		"scope": "typescript",
+		"prefix": "command",
+		"body": [
+			"import {",
+			"  ChatInputCommandInteraction,",
+			"  CacheType,",
+			"  SlashCommandBuilder,",
+			"} from \"discord.js\";",
+			"import Command from \"../classes/base/Command\";",
+			"import Main from \"../classes/Main\";",
+			"",
+			"class ${1:CommandClass} extends Command {",
+			"  public async executar(",
+			"    client: Main,",
+			"    interaction: ChatInputCommandInteraction<CacheType>",
+			"  ): Promise<void> {",
+			"    await interaction.editReply(\"foi\");",
+			"  }",
+			"}",
+			"",
+			"export default new ${1:CommandClass}(",
+			"  new SlashCommandBuilder()",
+			"    .setName(\"${2:commandName}\")",
+			"    .setDescription(\"${3:description}\")",
+			"    .setDescriptionLocalization(\"pt-BR\", \"${4:pt-description}\")",
+			");"
+		],
+		"description": "Log output to console"
+	}
+}

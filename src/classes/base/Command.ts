@@ -8,6 +8,7 @@ import {
 import Main from "../Main";
 
 export default abstract class Command {
+  //todo dm
   constructor(
     public data:
       | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">

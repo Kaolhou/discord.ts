@@ -27,7 +27,7 @@ export default class Card {
   }
 
   toString(): string {
-    if (this.color == "black" || this.symbol == "00") return this.symbol;
+    if (this.color == "black") return this.symbol;
     if (this.symbol == "plus")
       return this.symbol + this.buy + this.color.charAt(0);
 

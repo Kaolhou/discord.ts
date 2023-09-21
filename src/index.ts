@@ -16,12 +16,12 @@ new Main({
     "AutoModerationConfiguration",
     "AutoModerationExecution",
     "GuildMessageReactions",
-    'Guilds'
+    "Guilds",
   ],
 
   partials: [Partials.Message, Partials.User, Partials.Channel],
   logger: new Logger(process.argv.includes("-debug")),
   prisma: new PrismaClient(),
   memesPath: process.env.MEMES_PATH,
-  debug: process.argv.includes('--discord-debug')
-}).initialize(process.env.TOKEN);
+  debug: process.argv.includes("--discord-debug"),
+}).initialize(process.env.TOKEN); //todo singleton in events https://refactoring.guru/pt-br/design-patterns/singleton
