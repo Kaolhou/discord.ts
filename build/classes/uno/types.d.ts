@@ -1,0 +1,3 @@
+export type cards = "0r" | "1r" | "2r" | "3r" | "4r" | "5r" | "6r" | "7r" | "8r" | "9r" | "plus2r" | "blockr" | "rever" | "0b" | "1b" | "2b" | "3b" | "4b" | "5b" | "6b" | "7b" | "8b" | "9b" | "plus2b" | "blockb" | "reveb" | "0y" | "1y" | "2y" | "3y" | "4y" | "5y" | "6y" | "7y" | "8y" | "9y" | "plus2y" | "blocky" | "revey" | "0g" | "1g" | "2g" | "3g" | "4g" | "5g" | "6g" | "7g" | "8g" | "9g" | "plus2g" | "blockg" | "reveg" | "color" | "color4";
+export type color = "red" | "blue" | "green" | "yellow" | "black";
+export type unoSymbol = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "plus" | "reve" | "block" | "color" | "color4";
