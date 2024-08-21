@@ -1,0 +1,22 @@
+{
+  "name": "discord",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "bun build src/index.ts --target=node --outdir ./build",
+    "dev": "bun --watch src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.6"
+  }
+}

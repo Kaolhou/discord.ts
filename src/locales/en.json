@@ -1,0 +1,9 @@
+{
+  "ping": "ping",
+  "default_errors": {
+    "missing_permissions": "You don't have enough permissions to execute this command"
+  },
+  "namespace": {
+    "test": "something"
+  }
+}
