@@ -1,0 +1,8 @@
+{
+	"commands": {
+		"ping": {
+			"name": "ping",
+			"description": "Mostra informações do Websocket"
+		}
+	}
+}

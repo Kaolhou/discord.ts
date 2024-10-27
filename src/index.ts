@@ -1,41 +1,38 @@
-/**
- * Welcome to Cloudflare Workers!
- *
- * This is a template for a Queue consumer: a Worker that can consume from a
- * Queue: https://developers.cloudflare.com/queues/get-started/
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.toml`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import CustomClient from './classes/custom-client';
+const { DISCORD_KEY } = process.env;
 
-export default {
-	// Our fetch handler is invoked on a HTTP request: we can send a message to a queue
-	// during (or after) a request.
-	// https://developers.cloudflare.com/queues/platform/javascript-apis/#producer
-	async fetch(req, env, ctx): Promise<Response> {
-		// To send a message on a queue, we need to create the queue first
-		// https://developers.cloudflare.com/queues/get-started/#3-create-a-queue
-		await env.MY_QUEUE.send({
-			url: req.url,
-			method: req.method,
-			headers: Object.fromEntries(req.headers),
-		});
-		return new Response('Sent message to the queue');
-	},
-	// The queue handler is invoked when a batch of messages is ready to be delivered
-	// https://developers.cloudflare.com/queues/platform/javascript-apis/#messagebatch
-	async queue(batch, env): Promise<void> {
-		// A queue consumer can make requests to other endpoints on the Internet,
-		// write to R2 object storage, query a D1 Database, and much more.
-		for (let message of batch.messages) {
-			// Process each message (we'll just log these)
-			console.log(`message ${message.id} processed: ${JSON.stringify(message.body)}`);
-		}
-	},
-} satisfies ExportedHandler<Env, Error>;
+const DEBUG = process.argv.findIndex((a) => a == '--debug') != -1;
+
+// const originalConsole = console;
+
+// console = (function (oldCons) {
+// 	return {
+// 		log: function (...text: any[]) {
+// 			oldCons.log('\x1b[32m[LOG]\x1b[0m', ...text);
+// 		},
+// 		info: function (...text: any[]) {
+// 			oldCons.info('\x1b[34m[INFO]\x1b[0m', ...text);
+// 		},
+// 		warn: function (...text: any[]) {
+// 			oldCons.warn('\x1b[33m[LOG]\x1b[0m', ...text);
+// 		},
+// 		error: function (...text: any[]) {
+// 			oldCons.error('\x1b[31m[ERROR]\x1b[0m', ...text);
+// 		},
+// 		debug: function (...text: any[]) {
+// 			if (DEBUG) oldCons.error('\x1b[33m[DEBUG]\x1b[0m', ...text);
+// 		},
+// 	};
+// })(originalConsole);
+
+new CustomClient({
+	intents: [
+		'MessageContent',
+		'Guilds',
+		'GuildMessages',
+		'GuildVoiceStates',
+		'DirectMessages',
+		'GuildPresences',
+	],
+	debug: DEBUG,
+}).init(DISCORD_KEY!);
