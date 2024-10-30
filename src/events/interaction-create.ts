@@ -4,7 +4,7 @@ import Event from '../classes/event';
 
 class InteractionCreate extends Event<'interactionCreate'> {
 	async execute(client: CustomClient, interaction: Interaction<CacheType>) {
-		if (interaction.isCommand()) {
+		if (interaction.isChatInputCommand()) {
 			await interaction.deferReply();
 			const payload =
 				client.commands.get(interaction.commandName) ??

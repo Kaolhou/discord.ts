@@ -1,29 +1,20 @@
 import CustomClient from './classes/custom-client';
+// import { createLogger } from './classes/logger';
+
 const { DISCORD_KEY } = process.env;
 
 const DEBUG = process.argv.findIndex((a) => a == '--debug') != -1;
 
-// const originalConsole = console;
+// const logger = createLogger(DEBUG);
+// type LogLevel = 'log' | 'error' | 'warn' | 'debug' | 'info';
 
-// console = (function (oldCons) {
-// 	return {
-// 		log: function (...text: any[]) {
-// 			oldCons.log('\x1b[32m[LOG]\x1b[0m', ...text);
-// 		},
-// 		info: function (...text: any[]) {
-// 			oldCons.info('\x1b[34m[INFO]\x1b[0m', ...text);
-// 		},
-// 		warn: function (...text: any[]) {
-// 			oldCons.warn('\x1b[33m[LOG]\x1b[0m', ...text);
-// 		},
-// 		error: function (...text: any[]) {
-// 			oldCons.error('\x1b[31m[ERROR]\x1b[0m', ...text);
-// 		},
-// 		debug: function (...text: any[]) {
-// 			if (DEBUG) oldCons.error('\x1b[33m[DEBUG]\x1b[0m', ...text);
-// 		},
-// 	};
-// })(originalConsole);
+// Object.keys(logger)
+// 	.filter((i) => !i.startsWith('_'))
+// 	.forEach((i) => {
+// 		console[i as LogLevel] = (...args: any[]) => {
+// 			logger[i as LogLevel](...args);
+// 		};
+// 	});
 
 new CustomClient({
 	intents: [

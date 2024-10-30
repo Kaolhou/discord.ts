@@ -3,7 +3,6 @@ import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 export const User = sqliteTable('User', {
 	id: integer().primaryKey(),
 });
-
 export const Meme = sqliteTable('Meme', {
 	id: integer('id').primaryKey(),
 	name: text('name', { length: 150 }).notNull(),

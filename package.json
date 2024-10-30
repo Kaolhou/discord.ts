@@ -10,6 +10,7 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20241022.0",
 		"@types/bun": "^1.1.12",
+		"@types/mime-types": "^2.1.4",
 		"drizzle-kit": "^0.26.2",
 		"typescript": "^5.5.2"
 	},
@@ -17,6 +18,7 @@
 		"@aws-sdk/client-s3": "^3.679.0",
 		"axios": "^1.7.7",
 		"discord.js": "^14.16.3",
-		"drizzle-orm": "^0.35.3"
+		"drizzle-orm": "^0.35.3",
+		"mime-types": "^2.1.35"
 	}
 }
