@@ -1,10 +1,10 @@
-import { CommandInteraction, Interaction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import Command from '../classes/command';
 import CustomClient from '../classes/custom-client';
 import locales from '../classes/locales';
 
 class Ping extends Command {
-	async execute(client: CustomClient, interaction: CommandInteraction) {
+	async execute(client: CustomClient, interaction: ChatInputCommandInteraction) {
 		interaction.editReply(`PONG🏓🏓\n${client.ws.ping}ms`);
 	}
 	public data = new SlashCommandBuilder()
@@ -13,4 +13,4 @@ class Ping extends Command {
 		.setDescriptionLocalizations(locales.getAllButEnglish('commands.ping.description'));
 }
 
-export default new Ping('ping');
+export default new Ping();
