@@ -15,6 +15,13 @@
       "when": 1729980436454,
       "tag": "0001_condemned_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1730493954935,
+      "tag": "0002_wonderful_callisto",
+      "breakpoints": true
     }
   ]
 }

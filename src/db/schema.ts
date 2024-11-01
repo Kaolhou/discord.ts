@@ -8,17 +8,22 @@ export const Meme = sqliteTable('Meme', {
 	name: text('name', { length: 150 }).notNull(),
 	extension: text('extension', { length: 4 }).notNull(),
 	full_name: text('full_name', { length: 154 }).notNull().unique(),
-	authorId: integer('authorId')
+	author_id: integer('author_id')
 		.notNull()
 		.references(() => User.id),
 });
 
 export const LikeMeme = sqliteTable('LikeMeme', {
 	id: integer('id').primaryKey(),
-	authorId: integer('authorId')
+	author_id: integer('author_id')
 		.notNull()
 		.references(() => User.id),
-	memeId: integer('memeId')
+	meme_id: integer('meme_id')
 		.notNull()
 		.references(() => Meme.id),
+});
+
+export const Guild = sqliteTable('Guild', {
+	id: integer().primaryKey(),
+	agreedWithTerms: integer({ mode: 'boolean' }).notNull().default(false),
 });
