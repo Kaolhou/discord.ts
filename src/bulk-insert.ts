@@ -15,7 +15,7 @@ import path from 'path';
 			try {
 				const response = await sendFile(meme);
 				console.log(response);
-				await uploadMeme(meme, '518151686318063616', false).catch((e) =>
+				await uploadMeme(meme, process.env.ID_RESPONSIBLE!, false).catch((e) =>
 					console.error('houve um erro', e.response.data)
 				);
 				continue;

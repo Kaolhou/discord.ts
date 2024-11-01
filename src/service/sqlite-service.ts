@@ -22,7 +22,7 @@ export const getMemesFromId = async (id: string | number) => {
 	const query = new QueryBuilder()
 		.select()
 		.from(Meme)
-		.where(eq(Meme.authorId, Number(id)))
+		.where(eq(Meme.author_id, Number(id)))
 		.toSQL().sql;
 	return sendRequest<D1Response>(query, [id]);
 };
@@ -43,7 +43,7 @@ export async function uploadMeme<T extends boolean>(
 	const extension = splitted.pop()!;
 	const name = splitted.join('.');
 	const payload = preventUpload ? (a: any) => a : sendRequest;
-	const query = `INSERT INTO Meme (name, extension, full_name, authorId)\nVALUES ('${name}','${extension}','${full_name}',${author_id});\n\n`;
+	const query = `INSERT INTO Meme (name, extension, full_name, author_id)\nVALUES ('${name}','${extension}','${full_name}',${author_id});\n\n`;
 	return payload(query);
 }
 
