@@ -4,6 +4,7 @@ import { eq, sql } from 'drizzle-orm';
 import axios, { AxiosResponse } from 'axios';
 import {} from 'drizzle-orm';
 import { D1Response } from '../../types/d1-api-responses';
+import { TableColumns, TableData, TableNames, TransformKeys } from '../../types/schemas';
 const { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_DATABASE_ID, CLOUDFLARE_D1_TOKEN } = process.env;
 
 const sendRequest = <Response = unknown>(query: string, params?: (string | number)[]) =>
@@ -24,12 +25,12 @@ export const getMemesFromId = async (id: string | number) => {
 		.from(Meme)
 		.where(eq(Meme.author_id, Number(id)))
 		.toSQL().sql;
-	return sendRequest<D1Response>(query, [id]);
+	return sendRequest<D1Response<'Meme'>>(query, [id]);
 };
 
 export const getAllMemes = async () => {
 	const query = new QueryBuilder().select().from(Meme).toSQL().sql;
-	return sendRequest<D1Response>(query);
+	return sendRequest<D1Response<'Meme'>>(query);
 };
 
 type UploadResponse<T extends boolean> = T extends true ? string : AxiosResponse<any>;
@@ -55,4 +56,10 @@ export const uploadAllMemes = async (full_names: string[], author_id: string) =>
 	}
 	console.debug(query);
 	return sendRequest(query);
+};
+
+export const getAndCreateGuildIfNotExists = async (id: string) => {
+	const query = `INSERT OR IGNORE INTO \`Guild\` (id) VALUES (${id}); SELECT * FROM \`Guild\` WHERE id = ${id};`;
+
+	return sendRequest<D1Response<'Guild'>>(query);
 };

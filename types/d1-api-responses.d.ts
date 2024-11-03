@@ -1,13 +1,14 @@
-export interface D1Response {
+import type { TableColumns, TableData, TableNames, TransformKeys } from './schemas';
+export interface D1Response<T extends TableNames> {
 	errors: any[];
 	messages: any[];
-	result: Result[];
+	result: Result<T>[];
 	success: boolean;
 }
 
-export interface Result {
+export interface Result<T extends TableNames> {
 	meta: Meta;
-	results: ResultJson;
+	results: ResultJson<T>[];
 	success: boolean;
 }
 
@@ -21,10 +22,4 @@ export interface Meta {
 	size_after: number;
 }
 
-export type ResultJson = {
-	id: number;
-	name: string;
-	extension: string;
-	full_name: string;
-	authorId: number;
-}[];
+export type ResultJson<T extends TableNames> = TransformKeys<TableColumns<TableData<T>>>;

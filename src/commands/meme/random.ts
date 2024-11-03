@@ -1,9 +1,9 @@
 import { AttachmentBuilder, ChatInputCommandInteraction } from 'discord.js';
-import CustomClient from '../../classes/custom-client';
 import { getMemesFromId } from '../../service/sqlite-service';
-import { AxiosError } from 'axios';
+import CustomClient from '../../classes/custom-client';
 import { get_random } from '../../util/get-random';
 import { getFileByName } from '../../service/bucket-service';
+import { AxiosError } from 'axios';
 import fs from 'fs';
 import path from 'path';
 
