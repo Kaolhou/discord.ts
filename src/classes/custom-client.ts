@@ -7,9 +7,10 @@ type Options = ClientOptions & {
 };
 
 export default class CustomClient extends Client {
-	commands = new Collection<string, Command['execute']>();
 	public debug;
+	commands = new Collection<string, Command['execute']>();
 	constructor(options: Options) {
+		console.log('[event] initializing bot...')
 		super(options);
 		this.debug = options.debug;
 	}

@@ -1,4 +1,5 @@
 import CustomClient from './classes/custom-client';
+import './socket/index'
 // import { createLogger } from './classes/logger';
 
 const { DISCORD_KEY } = process.env;
