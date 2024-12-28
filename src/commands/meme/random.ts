@@ -1,5 +1,5 @@
 import { AttachmentBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { getMemesFromId } from '../../service/sqlite-service';
+import { getAllMemes, getMemesFromId } from '../../service/sqlite-service';
 import CustomClient from '../../classes/custom-client';
 import { get_random } from '../../util/get-random';
 import { getFileByName } from '../../service/bucket-service';
@@ -14,7 +14,11 @@ export async function randomMeme(client: CustomClient, interaction: ChatInputCom
 	const differenceInMs = now.valueOf() - cache_modified_date.valueOf();
 
 	// * not sure if this condition is completely right
-	if (fs.existsSync(cache_file) && differenceInMs > 24 * 60 * 60 * 1000) {
+	if (
+		!fs.existsSync(cache_file) ||
+		(fs.existsSync(cache_file) && differenceInMs > 24 * 60 * 60 * 1000) ||
+		fs.readFileSync(cache_file).toString('utf-8') == ''
+	) {
 		const response = await getMemesFromId(interaction.user.id).catch((e: AxiosError) =>
 			console.error(e.code, e.cause)
 		);
